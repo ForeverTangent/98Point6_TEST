@@ -8,28 +8,9 @@
 import Foundation
 
 
-enum GamePiece: Int {
-	case EMPTY
-	case PLAYER_1
-	case PLAYER_2
-}
-
-extension GamePiece: CustomStringConvertible {
-	var description: String {
-		switch self {
-			case .EMPTY:
-				return "E"
-			case .PLAYER_1:
-				return "1"
-			case .PLAYER_2:
-				return "2"
-		}
-	}
-}
-
-
-
 class DataManager {
+
+	// MARK: - Properties
 
 	private var maxArraySize: Int
 	public var networkData: [Int]
@@ -37,6 +18,9 @@ class DataManager {
 	private var numberOfColumns: Int
 	private var numberOfRows: Int
 	public var gameUIData: [[GamePiece]]
+
+
+	// MARK: - Inits
 
 	init(numberOfColumns: Int, numberOfRows: Int) {
 
@@ -51,6 +35,7 @@ class DataManager {
 
 	}
 
+	// MARK: - Class Methods
 
 	private func getDataForColumn(_ columnIndex: Int) -> [GamePiece] {
 		var results = [GamePiece]()
@@ -63,10 +48,18 @@ class DataManager {
 
 
 	func updateGameUIDataWithNetworkData(_ networkData: [Int]) {
-
+		for index in 0..<networkData.count {
+			let columnValue = networkData[index]
+			if index % 2 == 0 { // Player 1, remember index offset by 1.
+				insertTokenForPlayer(.PLAYER_1, intoColumn: columnValue)
+			} else { // Player 2
+				insertTokenForPlayer(.PLAYER_2, intoColumn: columnValue)
+			}
+		}
 	}
 
 
+	@discardableResult
 	private func insertTokenForPlayer(_ player: GamePiece, intoColumn columnIndex: Int) -> Bool {
 		let columnData = getDataForColumn(columnIndex)
 		if let rowIndex = columnData.firstIndex(of: .EMPTY) {
@@ -78,6 +71,8 @@ class DataManager {
 
 }
 
+
+// MARK: - CustomStringConvertible
 
 extension DataManager: CustomStringConvertible {
 	var description: String {
@@ -101,6 +96,7 @@ extension DataManager: CustomStringConvertible {
 	}
 }
 
+// MARK: - Unit Testing
 
 extension DataManager {
 

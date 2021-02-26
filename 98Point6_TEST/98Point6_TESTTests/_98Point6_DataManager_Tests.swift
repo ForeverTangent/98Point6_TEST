@@ -8,7 +8,7 @@
 import XCTest
 @testable import _8Point6_TEST
 
-class _98Point6_TESTTests: XCTestCase {
+class _98Point6_DataManager_Tests: XCTestCase {
 
 	/**
 	Testing Insert Piece
@@ -77,7 +77,6 @@ class _98Point6_TESTTests: XCTestCase {
 	}
 
 
-
 	/**
 	Test Get Column Data
 	*/
@@ -90,6 +89,30 @@ class _98Point6_TESTTests: XCTestCase {
 
 		let targetData1 = [GamePiece.PLAYER_1, 	GamePiece.PLAYER_2, GamePiece.PLAYER_1, GamePiece.EMPTY]
 		let data = dm.testGetDataForColumn(0)
+		print(data)
+		XCTAssertTrue(data == targetData1, "data != targetData")
+
+	}
+
+
+	/**
+	Insert from Network Data
+	*/
+	func testDataManager_3() {
+		let dm = DataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let mockNetworkData = [0, 1, 2, 0, 1, 0]
+
+		dm.updateGameUIDataWithNetworkData(mockNetworkData)
+
+		let targetData1 = [
+			[GamePiece.PLAYER_1, 	GamePiece.PLAYER_2, 	GamePiece.PLAYER_1, 	GamePiece.EMPTY],
+			[GamePiece.PLAYER_2, 	GamePiece.PLAYER_1, 	GamePiece.EMPTY, 		GamePiece.EMPTY],
+			[GamePiece.PLAYER_2, 	GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY],
+			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
+		]
+
+		let data = dm.gameUIData
 		print(data)
 		XCTAssertTrue(data == targetData1, "data != targetData")
 

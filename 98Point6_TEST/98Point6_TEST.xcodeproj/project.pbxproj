@@ -13,9 +13,13 @@
 		31B4048F25E969B9000B9B48 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 31B4048D25E969B9000B9B48 /* Main.storyboard */; };
 		31B4049125E969BC000B9B48 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31B4049025E969BC000B9B48 /* Assets.xcassets */; };
 		31B4049425E969BC000B9B48 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 31B4049225E969BC000B9B48 /* LaunchScreen.storyboard */; };
-		31B4049F25E969BC000B9B48 /* _98Point6_TESTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B4049E25E969BC000B9B48 /* _98Point6_TESTTests.swift */; };
+		31B4049F25E969BC000B9B48 /* _98Point6_DataManager_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B4049E25E969BC000B9B48 /* _98Point6_DataManager_Tests.swift */; };
 		31B404AA25E969BC000B9B48 /* _98Point6_TESTUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B404A925E969BC000B9B48 /* _98Point6_TESTUITests.swift */; };
 		31B404C125E96E70000B9B48 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B404C025E96E70000B9B48 /* DataManager.swift */; };
+		31B404C625E989B3000B9B48 /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B404C525E989B3000B9B48 /* Networking.swift */; };
+		31B404D325E989DF000B9B48 /* Quicktype.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B404D225E989DF000B9B48 /* Quicktype.swift */; };
+		31B404DB25E98AE3000B9B48 /* _98Point6_Networking_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B404DA25E98AE3000B9B48 /* _98Point6_Networking_Tests.swift */; };
+		31B404E925E9978C000B9B48 /* GamePiece.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B404E825E9978C000B9B48 /* GamePiece.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,12 +49,16 @@
 		31B4049325E969BC000B9B48 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		31B4049525E969BC000B9B48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		31B4049A25E969BC000B9B48 /* 98Point6_TESTTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = 98Point6_TESTTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		31B4049E25E969BC000B9B48 /* _98Point6_TESTTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _98Point6_TESTTests.swift; sourceTree = "<group>"; };
+		31B4049E25E969BC000B9B48 /* _98Point6_DataManager_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _98Point6_DataManager_Tests.swift; sourceTree = "<group>"; };
 		31B404A025E969BC000B9B48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		31B404A525E969BC000B9B48 /* 98Point6_TESTUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = 98Point6_TESTUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		31B404A925E969BC000B9B48 /* _98Point6_TESTUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _98Point6_TESTUITests.swift; sourceTree = "<group>"; };
 		31B404AB25E969BC000B9B48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		31B404C025E96E70000B9B48 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		31B404C525E989B3000B9B48 /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
+		31B404D225E989DF000B9B48 /* Quicktype.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quicktype.swift; sourceTree = "<group>"; };
+		31B404DA25E98AE3000B9B48 /* _98Point6_Networking_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _98Point6_Networking_Tests.swift; sourceTree = "<group>"; };
+		31B404E825E9978C000B9B48 /* GamePiece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamePiece.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +117,9 @@
 				31B4049225E969BC000B9B48 /* LaunchScreen.storyboard */,
 				31B4049525E969BC000B9B48 /* Info.plist */,
 				31B404C025E96E70000B9B48 /* DataManager.swift */,
+				31B404C525E989B3000B9B48 /* Networking.swift */,
+				31B404D225E989DF000B9B48 /* Quicktype.swift */,
+				31B404E825E9978C000B9B48 /* GamePiece.swift */,
 			);
 			path = 98Point6_TEST;
 			sourceTree = "<group>";
@@ -116,7 +127,8 @@
 		31B4049D25E969BC000B9B48 /* 98Point6_TESTTests */ = {
 			isa = PBXGroup;
 			children = (
-				31B4049E25E969BC000B9B48 /* _98Point6_TESTTests.swift */,
+				31B404DA25E98AE3000B9B48 /* _98Point6_Networking_Tests.swift */,
+				31B4049E25E969BC000B9B48 /* _98Point6_DataManager_Tests.swift */,
 				31B404A025E969BC000B9B48 /* Info.plist */,
 			);
 			path = 98Point6_TESTTests;
@@ -262,9 +274,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				31B4048C25E969B9000B9B48 /* ViewController.swift in Sources */,
+				31B404C625E989B3000B9B48 /* Networking.swift in Sources */,
 				31B404C125E96E70000B9B48 /* DataManager.swift in Sources */,
 				31B4048825E969B9000B9B48 /* AppDelegate.swift in Sources */,
 				31B4048A25E969B9000B9B48 /* SceneDelegate.swift in Sources */,
+				31B404D325E989DF000B9B48 /* Quicktype.swift in Sources */,
+				31B404E925E9978C000B9B48 /* GamePiece.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,7 +287,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31B4049F25E969BC000B9B48 /* _98Point6_TESTTests.swift in Sources */,
+				31B404DB25E98AE3000B9B48 /* _98Point6_Networking_Tests.swift in Sources */,
+				31B4049F25E969BC000B9B48 /* _98Point6_DataManager_Tests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

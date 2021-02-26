@@ -1,6 +1,10 @@
-import UIKit
+//
+//  Quicktype.swift
+//  98Point6_TEST
+//
+//  Created by Stanley Rosenbaum on 2/26/21.
+//
 
-var str = "Hello, playground"
 
 // This file was generated from JSON Schema using quicktype, do not modify it directly.
 // To parse the JSON, add this file to your project and do:
@@ -70,84 +74,3 @@ public extension URLSession {
 		return self.codableTask(with: url, completionHandler: completionHandler)
 	}
 }
-
-
-
-
-
-
-class Networking {
-	let defaultSession = URLSession(configuration: .default)
-	var dataTask: URLSessionDataTask?
-	let baseURLString = "https://w0ayb2ph1k.execute-api.us-west-2.amazonaws.com/production?moves="
-
-	/**
-	Helper to Convert Moves
-	*/
-	private func convertToStringTheMoves(_ moves: [Int]) -> String {
-		guard !moves.isEmpty else { return "[]" }
-		guard moves.count > 1 else { return "[\(moves[0])]" }
-		var results = "[\(String(moves[0]))"
-		for moveIndex in 1..<moves.count {
-			results += ",\(String(moves[moveIndex]))"
-		}
-		results += "]"
-		return results
-	}
-
-
-	/**
-
-	*/
-	func pingServerWithMoves(_ moves: [Int]) {
-
-		var theResults = ""
-
-		let movesAsString = convertToStringTheMoves(moves)
-
-		let theURLString = "\(baseURLString)\(movesAsString)"
-
-		dataTask?.cancel()
-		if let theUrl = URL(string: theURLString) {
-			dataTask = defaultSession.dataTask(with: theUrl) { [weak self] data, response, error in
-				defer {
-					self?.dataTask = nil
-				}
-				if let theError = error {
-					print("theError: \(theError)")
-				} else if
-					let theData = data {
-
-					let stringInt = String(decoding: theData, as: UTF8.self)
-					print("stringInt: \(stringInt)")
-
-
-				}
-			}
-			dataTask?.resume()
-		}
-
-
-	}
-
-}
-
-
-extension Networking {
-
-	#if DEBUG
-
-	public func testConvertToStringTheMoves(_ moves: [Int]) -> String {
-		return convertToStringTheMoves(moves)
-	}
-
-	#endif
-
-
-}
-
-
-
-
-Networking().pingServerWithMoves([])
-
