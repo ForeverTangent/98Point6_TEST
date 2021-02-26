@@ -10,24 +10,91 @@ import XCTest
 
 class _98Point6_TESTTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
+	/**
+	Testing Insert Piece
+	*/
+	func testDataManager_1_1() {
+		let dm = DataManager(numberOfColumns: 4, numberOfRows: 4)
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
+		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
+		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
+		let targetData1 = [
+			[GamePiece.PLAYER_1, 	GamePiece.EMPTY, 	GamePiece.EMPTY, GamePiece.EMPTY],
+			[GamePiece.PLAYER_1, 	GamePiece.EMPTY, 	GamePiece.EMPTY, 	GamePiece.EMPTY],
+			[GamePiece.PLAYER_1, 	GamePiece.EMPTY, 	GamePiece.EMPTY, 	GamePiece.EMPTY],
+			[GamePiece.EMPTY, 		GamePiece.EMPTY, 	GamePiece.EMPTY, 	GamePiece.EMPTY]
+		]
+		print(dm.gameUIData)
+		XCTAssertTrue(dm.gameUIData == targetData1, "dm.gameUIData != targetData")
+
+	}
+
+	func testDataManager_1_2() {
+		let dm = DataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
+		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_2, intoColumn: 0))
+		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
+
+
+		let targetData1 = [
+			[GamePiece.PLAYER_1, 	GamePiece.EMPTY, 	GamePiece.EMPTY, GamePiece.EMPTY],
+			[GamePiece.PLAYER_2, 	GamePiece.EMPTY, 	GamePiece.EMPTY, 	GamePiece.EMPTY],
+			[GamePiece.PLAYER_1, 	GamePiece.EMPTY, 	GamePiece.EMPTY, 	GamePiece.EMPTY],
+			[GamePiece.EMPTY, 		GamePiece.EMPTY, 	GamePiece.EMPTY, 	GamePiece.EMPTY]
+		]
+		print(dm.gameUIData)
+		XCTAssertTrue(dm.gameUIData == targetData1, "dm.gameUIData != targetData")
+
+	}
+
+
+	func testDataManager_1_3() {
+		let dm = DataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
+		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_2, intoColumn: 0))
+		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
+		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_2, intoColumn: 0))
+
+		XCTAssertFalse(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0),
+					   "Added piece when we should not have been able too")
+		XCTAssertFalse(dm.testInsertTokenForPlayer(.PLAYER_2, intoColumn: 0),
+					   "Added piece when we should not have been able too")
+
+		let targetData1 = [
+			[GamePiece.PLAYER_1, 	GamePiece.EMPTY, 	GamePiece.EMPTY, 	GamePiece.EMPTY],
+			[GamePiece.PLAYER_2, 	GamePiece.EMPTY, 	GamePiece.EMPTY, 	GamePiece.EMPTY],
+			[GamePiece.PLAYER_1, 	GamePiece.EMPTY, 	GamePiece.EMPTY, 	GamePiece.EMPTY],
+			[GamePiece.PLAYER_2, 	GamePiece.EMPTY, 	GamePiece.EMPTY, 	GamePiece.EMPTY]
+		]
+		print(dm.gameUIData)
+		XCTAssertTrue(dm.gameUIData == targetData1, "dm.gameUIData != targetData")
+
+	}
+
+
+
+	/**
+	Test Get Column Data
+	*/
+	func testDataManager_2() {
+		let dm = DataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
+		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_2, intoColumn: 0))
+		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
+
+		let targetData1 = [GamePiece.PLAYER_1, 	GamePiece.PLAYER_2, GamePiece.PLAYER_1, GamePiece.EMPTY]
+		let data = dm.testGetDataForColumn(0)
+		print(data)
+		XCTAssertTrue(data == targetData1, "data != targetData")
+
+	}
+
+
 
 }
