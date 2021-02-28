@@ -1,24 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="_8Point6_TEST" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ORU-4g-ehf">
+                                <rect key="frame" x="57" y="298" width="300" height="300"/>
+                                <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" notEnabled="YES"/>
+                                    <bool key="isElement" value="NO"/>
+                                </accessibility>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="ORU-4g-ehf" secondAttribute="height" multiplier="1:1" id="Rif-QT-FSc"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="300" id="jZb-rm-79N"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="jsb-fW-ljW"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XwP-3v-C1y">
+                                <rect key="frame" x="57" y="260" width="300" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="q7c-wI-h2g"/>
+                                </constraints>
+                                <state key="normal" title="INFO"/>
+                            </button>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="ORU-4g-ehf" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="XwP-3v-C1y" secondAttribute="leading" id="J5y-Hh-HCM"/>
+                            <constraint firstItem="ORU-4g-ehf" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="OKm-BO-geI"/>
+                            <constraint firstItem="ORU-4g-ehf" firstAttribute="centerX" secondItem="XwP-3v-C1y" secondAttribute="centerX" id="P96-nG-I8O"/>
+                            <constraint firstItem="ORU-4g-ehf" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="XwP-3v-C1y" secondAttribute="trailing" id="Y8C-Za-FqK"/>
+                            <constraint firstItem="ORU-4g-ehf" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="YIy-mS-RI8"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="ORU-4g-ehf" secondAttribute="bottom" constant="8" id="akB-DZ-YdT"/>
+                            <constraint firstItem="ORU-4g-ehf" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="d1P-bK-Yhx"/>
+                            <constraint firstItem="ORU-4g-ehf" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="fF5-Rm-0m8"/>
+                            <constraint firstItem="ORU-4g-ehf" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="mNg-uq-kOW"/>
+                            <constraint firstItem="XwP-3v-C1y" firstAttribute="top" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="8" id="pSS-H2-t9i"/>
+                            <constraint firstItem="ORU-4g-ehf" firstAttribute="top" secondItem="XwP-3v-C1y" secondAttribute="bottom" constant="8" symbolic="YES" id="qok-Sa-fPg"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="gameField" destination="ORU-4g-ehf" id="3iE-ah-XM8"/>
+                        <outlet property="infoButton" destination="XwP-3v-C1y" id="thd-Ld-5Xp"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="129.91071428571428" y="26.086956521739133"/>
         </scene>
     </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemOrangeColor">
+            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
 </document>

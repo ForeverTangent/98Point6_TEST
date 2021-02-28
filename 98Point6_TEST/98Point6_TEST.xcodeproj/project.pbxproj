@@ -59,6 +59,7 @@
 		31B404D225E989DF000B9B48 /* Quicktype.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quicktype.swift; sourceTree = "<group>"; };
 		31B404DA25E98AE3000B9B48 /* _98Point6_Networking_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _98Point6_Networking_Tests.swift; sourceTree = "<group>"; };
 		31B404E825E9978C000B9B48 /* GamePiece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamePiece.swift; sourceTree = "<group>"; };
+		31B404ED25E9A1E2000B9B48 /* 98Point6_TEST.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = 98Point6_TEST.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +110,7 @@
 		31B4048625E969B9000B9B48 /* 98Point6_TEST */ = {
 			isa = PBXGroup;
 			children = (
+				31B404ED25E9A1E2000B9B48 /* 98Point6_TEST.entitlements */,
 				31B4048725E969B9000B9B48 /* AppDelegate.swift */,
 				31B4048925E969B9000B9B48 /* SceneDelegate.swift */,
 				31B4048B25E969B9000B9B48 /* ViewController.swift */,
@@ -456,6 +458,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = 98Point6_TEST/98Point6_TEST.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 69WU6LWMSQ;
 				INFOPLIST_FILE = 98Point6_TEST/Info.plist;
@@ -465,6 +468,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Rosenbaum.-8Point6-TEST";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -475,6 +479,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = 98Point6_TEST/98Point6_TEST.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 69WU6LWMSQ;
 				INFOPLIST_FILE = 98Point6_TEST/Info.plist;
@@ -484,6 +489,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Rosenbaum.-8Point6-TEST";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

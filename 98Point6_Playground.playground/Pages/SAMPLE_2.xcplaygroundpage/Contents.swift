@@ -72,14 +72,23 @@ public extension URLSession {
 }
 
 
-
-
-
+enum Result<Value> {
+	case success(Value)
+	case failure(Error)
+}
 
 class Networking {
+
+	// MARK: - Properties
+
 	let defaultSession = URLSession(configuration: .default)
 	var dataTask: URLSessionDataTask?
 	let baseURLString = "https://w0ayb2ph1k.execute-api.us-west-2.amazonaws.com/production?moves="
+
+	// MARK: - Inits (None)
+
+
+	// MARK: - Class Methods
 
 	/**
 	Helper to Convert Moves
@@ -97,19 +106,49 @@ class Networking {
 
 
 	/**
+	Helper to Convert Moves
+	*/
+	private func convertToMovesTheString(_ intArrayString: String) -> [Int] {
+
+		var localString = intArrayString
+
+		guard let leftBracIndex = localString.firstIndex(of: "[") else { return [Int]() }
+		localString.remove(at: leftBracIndex)
+
+		guard let rightBracIndex = localString.firstIndex(of: "]")else { return [Int]() }
+		localString.remove(at: rightBracIndex)
+
+		let splits = localString.split(separator: ",")
+
+		var results = [Int]()
+
+		for element in splits {
+			if let theInt = Int(element) {
+				results.append(theInt)
+			}
+		}
+
+		return results
+
+	}
+
+
+
+	/**
 
 	*/
-	func pingServerWithMoves(_ moves: [Int]) {
-
-		var theResults = ""
+	func pingServerWithMoves(_ moves: [Int], completion: @escaping (String) -> Void) {
 
 		let movesAsString = convertToStringTheMoves(moves)
 
 		let theURLString = "\(baseURLString)\(movesAsString)"
 
+		var results = ""
+
 		dataTask?.cancel()
 		if let theUrl = URL(string: theURLString) {
 			dataTask = defaultSession.dataTask(with: theUrl) { [weak self] data, response, error in
+
 				defer {
 					self?.dataTask = nil
 				}
@@ -119,35 +158,24 @@ class Networking {
 					let theData = data {
 
 					let stringInt = String(decoding: theData, as: UTF8.self)
+					if stringInt.contains("No moves left") {
+						print("NO MOVES")
+					}
 					print("stringInt: \(stringInt)")
-
+					completion(stringInt)
 
 				}
 			}
 			dataTask?.resume()
 		}
-
-
 	}
 
 }
 
 
-extension Networking {
-
-	#if DEBUG
-
-	public func testConvertToStringTheMoves(_ moves: [Int]) -> String {
-		return convertToStringTheMoves(moves)
-	}
-
-	#endif
 
 
+Networking().pingServerWithMoves([0,1,2,3,0,1,2,3,0,1,2,3,0,1,2]) { (theString) in
+	print("again: \(theString)")
 }
-
-
-
-
-Networking().pingServerWithMoves([])
 

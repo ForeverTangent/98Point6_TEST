@@ -7,7 +7,9 @@
 
 import Foundation
 
-
+/**
+Our Data wrangling class.  Because the server wants one thing and the game wants another, and I don't see an clean common DS for all.
+*/
 class DataManager {
 
 	// MARK: - Properties
@@ -37,6 +39,13 @@ class DataManager {
 
 	// MARK: - Class Methods
 
+	/**
+	Gets all the data for one column
+
+	Losest index is bottom row.
+	- Parameter columnIndex: Int
+	- Returns: [GamePiece]
+	*/
 	private func getDataForColumn(_ columnIndex: Int) -> [GamePiece] {
 		var results = [GamePiece]()
 		for rowIndex in 0..<numberOfRows {
@@ -47,6 +56,9 @@ class DataManager {
 	}
 
 
+	/**
+	Updates the GameUI data.
+	*/
 	func updateGameUIDataWithNetworkData(_ networkData: [Int]) {
 		for index in 0..<networkData.count {
 			let columnValue = networkData[index]
@@ -59,6 +71,13 @@ class DataManager {
 	}
 
 
+	/**
+	Inserts a token only if there is a room in column otherwise returns false.
+
+	- Parameter player: GamePiece
+	- Parameter columnIndex: Int
+	- Returns: Bool, if successful (if not room in column returns false.
+	*/
 	@discardableResult
 	private func insertTokenForPlayer(_ player: GamePiece, intoColumn columnIndex: Int) -> Bool {
 		let columnData = getDataForColumn(columnIndex)

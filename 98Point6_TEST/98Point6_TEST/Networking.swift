@@ -76,15 +76,18 @@ class Networking {
 	/**
 
 	*/
-	func pingServerWithMoves(_ moves: [Int]) {
+	func pingServerWithMoves(_ moves: [Int], completion: @escaping (String) -> String) {
+
+		guard var theDataTask = dataTask else { return }
 
 		let movesAsString = convertToStringTheMoves(moves)
 
 		let theURLString = "\(baseURLString)\(movesAsString)"
 
-		dataTask?.cancel()
+		theDataTask.cancel()
 		if let theUrl = URL(string: theURLString) {
-			dataTask = defaultSession.dataTask(with: theUrl) { [weak self] data, response, error in
+			theDataTask = defaultSession.dataTask(with: theUrl) { [weak self] data, response, error in
+
 				defer {
 					self?.dataTask = nil
 				}
@@ -96,9 +99,12 @@ class Networking {
 					let stringInt = String(decoding: theData, as: UTF8.self)
 					print("stringInt: \(stringInt)")
 
+					let results = completion(stringInt)
+					print("results: \(results)")
+
 				}
 			}
-			dataTask?.resume()
+			theDataTask.resume()
 		}
 
 	}

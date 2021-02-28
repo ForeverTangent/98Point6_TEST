@@ -67,17 +67,21 @@ class _98Point6_Networking_Tests: XCTestCase {
 
 
 
-//	/**
-//	Testing Insert Piece
-//	*/
-//	func testNetworking_PingServer_1() {
-//		let networking = Networking()
-//
-//		var moves = [Int]()
-//
-//		networking.pingServerWithMoves(moves)
-//
-//	}
+
+	/**
+	Testing Insert Piece
+	*/
+	func testNetworking_PingServer_1() {
+		let networking = Networking()
+
+		let moves = [Int]()
+
+		networking.pingServerWithMoves(moves) { (theString) in
+			print("HEY: \(theString)")
+			return theString
+		}
+
+	}
 
 
 }

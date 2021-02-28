@@ -6,7 +6,7 @@
 //
 
 
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
+// This file was generated from JSON Schema using [quicktype](https://app.quicktype.io), do not modify it directly.
 // To parse the JSON, add this file to your project and do:
 //
 //   let n86Moves = try N86Moves(json)
@@ -58,6 +58,7 @@ func newJSONEncoder() -> JSONEncoder {
 }
 
 // MARK: - URLSession response handlers
+
 
 public extension URLSession {
 	fileprivate func codableTask<T: Codable>(with url: URL, completionHandler: @escaping (T?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
