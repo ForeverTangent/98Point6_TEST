@@ -77,19 +77,7 @@ class ViewController: UIViewController {
 		gameDataManager = GameDataManager(numberOfColumns: ViewController.numberOfColumns,
 										  numberOfRows: ViewController.numberOfRows)
 		setupGameFieldStackView()
-//		networking.networkDelegate = self
 
-	}
-
-	override func viewWillAppear(_ animated: Bool) {
-
-//		guard let theGameDataManager = gameDataManager else { return }
-//
-//		updateCellAt(row: 0, column: 0, withPiece: .PLAYER_1)
-//		updateCellAt(row: 1, column: 0, withPiece: .PLAYER_1)
-//		updateCellAt(row: 2, column: 0, withPiece: .PLAYER_1)
-//
-//		print(gameDataManager?.gameUIData)
 
 	}
 
@@ -121,7 +109,9 @@ class ViewController: UIViewController {
 										  })
 		alert.addAction(takeFirstTurn)
 		alert.addAction(passFirstTurn)
-		self.present(alert, animated: true, completion: nil)
+		DispatchQueue.main.async {
+			self.present(alert, animated: true, completion: nil)
+		}
 	}
 
 	enum GameResult: Int {
@@ -131,27 +121,28 @@ class ViewController: UIViewController {
 	}
 
 	func presentGameOverWithResult(_ result: GameResult) {
-		let gameOverMessage: String
-		switch result {
-			case .WIN:
-				gameOverMessage = "You Won!"
-			case .LOSE:
-				gameOverMessage = "You Lost."
-			case .DRAW:
-				gameOverMessage = "It is a draw"
-		}
-
-		let alert = UIAlertController(title: "\(gameOverMessage)",
-									  message: "You want to play again?",
-									  preferredStyle: .alert)
-		let yesPlayAgain = UIAlertAction(title: NSLocalizedString("YES", comment: "Server goes First"),
-										  style: .default,
-										  handler: { _ in
-											self.logger.debug("The player wants to play again.")
-											self.clearGame()
-										  })
-		alert.addAction(yesPlayAgain)
 		DispatchQueue.main.async {
+			let gameOverMessage: String
+			switch result {
+				case .WIN:
+					gameOverMessage = "You Won!"
+				case .LOSE:
+					gameOverMessage = "You Lost."
+				case .DRAW:
+					gameOverMessage = "It is a draw"
+			}
+
+			let alert = UIAlertController(title: "\(gameOverMessage)",
+										  message: "You want to play again?",
+										  preferredStyle: .alert)
+			let yesPlayAgain = UIAlertAction(title: NSLocalizedString("YES", comment: "Server goes First"),
+											 style: .default,
+											 handler: { _ in
+												self.logger.debug("The player wants to play again.")
+												self.clearGame()
+											 })
+			alert.addAction(yesPlayAgain)
+
 			self.present(alert, animated: true, completion: nil)
 		}
 	}
@@ -174,6 +165,7 @@ class ViewController: UIViewController {
 		for index in 0..<ViewController.numberOfColumns {
 			let newColumn = createColumn(number: index)
 			gameFieldStackView.addArrangedSubview(newColumn)
+			accessibilityElements?.append(newColumn)
 		}
 
 	}
@@ -187,8 +179,10 @@ class ViewController: UIViewController {
 		guard let theGameDataManager = gameDataManager else { return }
 
 		clearField()
-		theGameDataManager.clearGameData()
-		presentPassFirstTurnAlert()
+		DispatchQueue.main.async {
+			theGameDataManager.clearGameData()
+			self.presentPassFirstTurnAlert()
+		}
 
 	}
 
@@ -236,6 +230,7 @@ class ViewController: UIViewController {
 			let recentMove = theGameDataManager.insertTokenForPlayer(.P2_SERVER, intoColumn: theNewMoveColumn)
 			DispatchQueue.main.async {
 				self.updateCellAt(row: recentMove.row, column: recentMove.column, withPiece: .P2_SERVER)
+				UIAccessibility.post(notification: .announcement, argument: "Server added to column \(theNewMoveColumn)")
 			}
 			let isWinningMove = theGameDataManager.isWinningMoveFrom(row: recentMove.row,
 																	 column: recentMove.column,
@@ -243,11 +238,11 @@ class ViewController: UIViewController {
 			if isWinningMove {
 				presentGameOverWithResult(.LOSE)
 			}
-			if !isGameADraw() {
-				print("PLAYERS TURN")
+			if isGameADraw() {
+				presentGameOverWithResult(.DRAW)
 			}
 		}
-
+		print("PLAYERS TURN")
 		isPlayersTurn = true
 
 	}
@@ -276,10 +271,14 @@ class ViewController: UIViewController {
 			if isWinningMove {
 				presentGameOverWithResult(.WIN)
 			}
-			if !isGameADraw() {
-				print("SERVERS TURN")
-				processServersTurn()
+			if isGameADraw() {
+				presentGameOverWithResult(.DRAW)
 			}
+
+			print("SERVERS TURN")
+			processServersTurn()
+		} else {
+			UIAccessibility.post(notification: .announcement, argument: "COLUMN FULL")
 		}
 
 	}
@@ -296,7 +295,6 @@ class ViewController: UIViewController {
 		}
 
 		if !theGameDataManager.areAnyPossibleMovesLeft {
-			presentGameOverWithResult(.DRAW)
 			return true
 		}
 
@@ -333,6 +331,7 @@ class ViewController: UIViewController {
 		columnStackView.distribution = .fillEqually
 		columnStackView.cellViews = cellsInColumn
 		columnStackView.columnNumber = number
+		columnStackView.isAccessibilityElement = true
 		columnStackView.accessibilityTraits = .button
 		columnStackView.accessibilityLabel = "Column \(String(describing: columnStackView.columnNumber))"
 
@@ -348,16 +347,6 @@ class ViewController: UIViewController {
 		columnStackView.addGestureRecognizer(tap)
 
 		return columnStackView
-
-	}
-
-	@objc
-	/**
-	What happens when you tap a column,
-	*/
-	func tappedColumn() {
-
-		print("Column Tapped")
 
 	}
 

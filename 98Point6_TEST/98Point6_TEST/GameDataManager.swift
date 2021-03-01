@@ -60,7 +60,7 @@ class GameDataManager {
 	func clearGameData() {
 		self.gameUIData = Array(repeating: Array(repeating: GamePiece.EMPTY, count: numberOfColumns), count: numberOfRows)
 		tokensEntered = 0
-		print(self.gameUIData)
+//		print(self.gameUIData)
 	}
 
 
@@ -159,9 +159,6 @@ class GameDataManager {
 		var count = 0
 		var results = [Int]()
 
-		print("player1Queue.isEmpty \(player1Queue.isEmpty)")
-		print("player1Queue.isEmpty \(player2Queue.isEmpty)")
-
 		while !player1Queue.isEmpty || !player2Queue.isEmpty {
 			if
 				count % 2 == 0,
@@ -225,6 +222,156 @@ class GameDataManager {
 	}
 
 
+
+	private func checkingDown(row: Int,
+							  column:Int,
+							  gamePiece: GamePiece,
+							  targetMatches: Int = ViewController.numberOfMatches) -> Bool {
+
+		var startingCount = 0
+		var totalCount = 0
+
+		if gameUIData[row][column] == gamePiece {
+			startingCount = 1
+		}
+
+		// Straight Down
+		let downMatches = getNumberOfMatchesOf(gamePiece: .PLAYER_1,
+											   startingAtRow: row - 1,
+											   andColumn: column,
+											   inDirectionColX: 0,
+											   andRowY: -1)
+		totalCount = startingCount + downMatches
+		if totalCount >= targetMatches {
+			return true
+		}
+
+		return false
+
+	}
+
+
+
+	private func checkingLeftRight(row: Int,
+								   column:Int,
+								   gamePiece: GamePiece,
+								   targetMatches: Int = ViewController.numberOfMatches) -> Bool {
+
+		var startingCount = 0
+		var totalCount = 0
+
+		if gameUIData[row][column] == gamePiece {
+			startingCount = 1
+		}
+
+		// Column increasing
+		let columnIncresingMatches = getNumberOfMatchesOf(gamePiece: gamePiece,
+														  startingAtRow: row,
+														  andColumn: column + 1,
+														  inDirectionColX: 1,
+														  andRowY: 0)
+
+		// Column decreasing
+		let columnDecresingMatches = getNumberOfMatchesOf(gamePiece: gamePiece,
+														  startingAtRow: row,
+														  andColumn: column - 1,
+														  inDirectionColX: -1,
+														  andRowY: 0)
+
+		let totalLeftToRight = columnIncresingMatches + columnDecresingMatches
+		totalCount = startingCount + totalLeftToRight
+		if totalCount >= targetMatches {
+			return true
+		}
+
+		return false
+
+	}
+
+
+	/**
+	Diagonal -> \
+
+	*/
+	private func checkingDiagonal1(row: Int,
+								   column:Int,
+								   gamePiece: GamePiece,
+								   targetMatches: Int = ViewController.numberOfMatches) -> Bool {
+
+		var startingCount = 0
+		var totalCount = 0
+
+		if gameUIData[row][column] == gamePiece {
+			startingCount = 1
+		}
+
+		// Down, Column decreasing
+		let downColumnDecresingMatches = getNumberOfMatchesOf(gamePiece: gamePiece,
+															  startingAtRow: row - 1,
+															  andColumn: column - 1,
+															  inDirectionColX: -1,
+															  andRowY: -1)
+
+		let upColumnIncreasingMatches = getNumberOfMatchesOf(gamePiece: gamePiece,
+															 startingAtRow: row + 1,
+															 andColumn: column + 1,
+															 inDirectionColX: 1,
+															 andRowY: 1)
+
+		let totalDiagonal2 = downColumnDecresingMatches + upColumnIncreasingMatches
+		totalCount = startingCount + totalDiagonal2
+		if totalCount >= targetMatches {
+			return true
+		}
+
+		return false
+
+	}
+
+
+	/**
+	Diagonal -> /
+
+	*/
+	private func checkingDiagonal2(row: Int,
+								   column:Int,
+								   gamePiece: GamePiece,
+								   targetMatches: Int = ViewController.numberOfMatches) -> Bool {
+
+		var startingCount = 0
+		var totalCount = 0
+
+		if gameUIData[row][column] == gamePiece {
+			startingCount = 1
+		}
+
+		// Down, Column decreasing
+		let downColumnDecresingMatches = getNumberOfMatchesOf(gamePiece: gamePiece,
+															  startingAtRow: row + 1,
+															  andColumn: column - 1,
+															  inDirectionColX: -1,
+															  andRowY: 1)
+
+		let upColumnIncreasingMatches = getNumberOfMatchesOf(gamePiece: gamePiece,
+															 startingAtRow: row - 1,
+															 andColumn: column + 1,
+															 inDirectionColX: 1,
+															 andRowY: -1)
+
+		let totalDiagonal2 = downColumnDecresingMatches + upColumnIncreasingMatches
+		totalCount = startingCount + totalDiagonal2
+		if totalCount >= targetMatches {
+			return true
+		}
+
+		return false
+
+
+
+	}
+
+
+
 	/**
 	Checks if there is a win, with recurssion helper.
 
@@ -239,90 +386,37 @@ class GameDataManager {
 								  gamePiece: GamePiece,
 								  targetMatches: Int = ViewController.numberOfMatches) -> Bool {
 
-		var startingCount = 0
 
-		if gameUIData[row][column] == gamePiece {
-			startingCount = 1
-		}
-
-		// Straight Down
-		let downMatches = getNumberOfMatchesOf(gamePiece: .PLAYER_1,
-											   startingAtRow: row - 1,
-											   andColumn: column,
-											   inDirectionColX: 0,
-											   andRowY: -1)
-		if (startingCount + downMatches) >= targetMatches {
+		if checkingDown(row: row,
+						column: column,
+						gamePiece: gamePiece) {
+			print("Won Via down starting at \(row), \(column) with \(gamePiece.rawValue)")
 			return true
 		}
 
 
-
-		// LEFT TO RIGHT
-
-		// Column increasing
-		let columnIncresingMatches = getNumberOfMatchesOf(gamePiece: .PLAYER_1,
-														  startingAtRow: row,
-														  andColumn: column + 1,
-														  inDirectionColX: 1,
-														  andRowY: 0)
-
-		// Column decreasing
-		let columnDecresingMatches = getNumberOfMatchesOf(gamePiece: .PLAYER_1,
-														  startingAtRow: row,
-														  andColumn: column - 1,
-														  inDirectionColX: -1,
-														  andRowY: 0)
-
-		let totalLeftToRight = columnIncresingMatches + columnDecresingMatches
-
-		if (startingCount + totalLeftToRight) >= targetMatches {
+		if checkingLeftRight(row: row,
+							 column: column,
+							 gamePiece: gamePiece) {
+			print("Won Via checkingLeftRight starting at \(row), \(column) with \(gamePiece.rawValue)")
 			return true
 		}
 
 
-		// Diagonal 1
-
-		// Down, Column increasing
-		let downColumnIncresingMatches = getNumberOfMatchesOf(gamePiece: .PLAYER_1,
-															  startingAtRow: row - 1,
-															  andColumn: column + 1,
-															  inDirectionColX: 1,
-															  andRowY: -1)
-
-		//
-		let upColumnDecreasingMatches = getNumberOfMatchesOf(gamePiece: .PLAYER_1,
-															  startingAtRow: row + 1,
-															  andColumn: column - 1,
-															  inDirectionColX: -1,
-															  andRowY: 1)
-
-		let totalDiagonal1 = downColumnIncresingMatches + upColumnDecreasingMatches
-
-		if (startingCount + totalDiagonal1) >= targetMatches {
+		if checkingDiagonal1(row: row,
+							 column: column,
+							 gamePiece: gamePiece) {
+			print("Won Via checkingDiagonal1 starting at \(row), \(column) with \(gamePiece.rawValue)")
 			return true
 		}
 
 
-		// Down, Column decreasing
-		let downColumnDecresingMatches = getNumberOfMatchesOf(gamePiece: .PLAYER_1,
-															  startingAtRow: row - 1,
-															  andColumn: column - 1,
-															  inDirectionColX: -1,
-															  andRowY: -1)
-
-		let upColumnIncreasingMatches = getNumberOfMatchesOf(gamePiece: .PLAYER_1,
-															  startingAtRow: row + 1,
-															  andColumn: column + 1,
-															  inDirectionColX: 1,
-															  andRowY: 1)
-
-		let totalDiagonal2 = downColumnDecresingMatches + upColumnIncreasingMatches
-
-
-		if (startingCount + totalDiagonal2) >= targetMatches {
+		if checkingDiagonal2(row: row,
+							 column: column,
+							 gamePiece: gamePiece) {
+			print("Won Via checkingDiagonal2 starting at \(row), \(column) with \(gamePiece.rawValue)")
 			return true
 		}
-
 
 		return false
 

@@ -250,7 +250,7 @@ class _98Point6_DataManager_Tests: XCTestCase {
 		dm.updateGameUIDataWithNetworkData(mockNetworkData)
 
 		let data = dm.gameUIData
-		print(data)
+		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
 		let win = dm.isWinningMoveFrom(row: 3, column: 0, gamePiece: .PLAYER_1)
@@ -546,20 +546,20 @@ class _98Point6_DataManager_Tests: XCTestCase {
 	/**
 	Test for draw game
 	*/
-	func testDataManager_13() {
+	func testDataManager_14() {
 		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
 
 		let targetData1 = [
-			[GamePiece.PLAYER_1, 	GamePiece.P2_SERVER, 	GamePiece.PLAYER_1, 	GamePiece.P2_SERVER],
+			[GamePiece.PLAYER_1, 	GamePiece.P2_SERVER, 	GamePiece.P2_SERVER, 	GamePiece.PLAYER_1],
 			[GamePiece.P2_SERVER, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_1, 	GamePiece.P2_SERVER],
-			[GamePiece.P2_SERVER, 	GamePiece.PLAYER_1,	 	GamePiece.P2_SERVER, 	GamePiece.PLAYER_1],
-			[GamePiece.PLAYER_1, 	GamePiece.P2_SERVER, 	GamePiece.PLAYER_1, 	GamePiece.P2_SERVER]
+			[GamePiece.PLAYER_1, 	GamePiece.P2_SERVER,	GamePiece.P2_SERVER, 	GamePiece.PLAYER_1],
+			[GamePiece.PLAYER_1, 	GamePiece.P2_SERVER, 	GamePiece.P2_SERVER, 	GamePiece.PLAYER_1]
 		]
 
-		let mockNetworkData = [0, 1, 2, 3,
+		let mockNetworkData = [0, 1, 3, 2,
 							   1, 0, 2, 3,
-							   1, 0, 3, 2,
-							   0, 1, 2, 3]
+							   0, 1, 3, 2,
+							   0, 1, 3, 2]
 
 		dm.updateGameUIDataWithNetworkData(mockNetworkData)
 
@@ -569,22 +569,62 @@ class _98Point6_DataManager_Tests: XCTestCase {
 
 		print(dm)
 
-		var player1ShouldBeFalse = dm.isWinningMoveFrom(row: 3, column: 0, gamePiece: .PLAYER_1)
+		var result = true
 
-		XCTAssertFalse(player1ShouldBeFalse, "No Win should be possible.")
+		// Row 1
+		result = dm.isWinningMoveFrom(row: 0, column: 0, gamePiece: .PLAYER_1)
+		XCTAssertFalse(result, "No Win should be possible at 0,0")
 
-		var player2ShouldBeFalse = dm.isWinningMoveFrom(row: 3, column: 3, gamePiece: .P2_SERVER)
+		result = dm.isWinningMoveFrom(row: 0, column: 1, gamePiece: .P2_SERVER)
+		XCTAssertFalse(result, "No Win should be possible at 0,1")
 
-		XCTAssertFalse(player2ShouldBeFalse, "No Win should be possible.")
+		result = dm.isWinningMoveFrom(row: 0, column: 2, gamePiece: .P2_SERVER)
+		XCTAssertFalse(result, "No Win should be possible at 0,2")
 
-		
-		player2ShouldBeFalse = dm.isWinningMoveFrom(row: 3, column: 1, gamePiece: .P2_SERVER)
+		result = dm.isWinningMoveFrom(row: 0, column: 3, gamePiece: .PLAYER_1)
+		XCTAssertFalse(result, "No Win should be possible at 0,3")
 
-		XCTAssertFalse(player2ShouldBeFalse, "No Win should be possible.")
 
-		player1ShouldBeFalse = dm.isWinningMoveFrom(row: 3, column: 2, gamePiece: .PLAYER_1)
+		// Row 2
+		result = dm.isWinningMoveFrom(row: 1, column: 0, gamePiece: .P2_SERVER)
+		XCTAssertFalse(result, "No Win should be possible at 1,0")
 
-		XCTAssertFalse(player1ShouldBeFalse, "No Win should be possible.")
+		result = dm.isWinningMoveFrom(row: 1, column: 1, gamePiece: .PLAYER_1)
+		XCTAssertFalse(result, "No Win should be possible at 1,1")
+
+		result = dm.isWinningMoveFrom(row: 1, column: 2, gamePiece: .PLAYER_1)
+		XCTAssertFalse(result, "No Win should be possible at 1,2")
+
+		result = dm.isWinningMoveFrom(row: 1, column: 3, gamePiece: .P2_SERVER)
+		XCTAssertFalse(result, "No Win should be possible at 1,3")
+
+
+		// Row 3
+		result = dm.isWinningMoveFrom(row: 2, column: 0, gamePiece: .PLAYER_1)
+		XCTAssertFalse(result, "No Win should be possible at 2,0")
+
+		result = dm.isWinningMoveFrom(row: 2, column: 1, gamePiece: .P2_SERVER)
+		XCTAssertFalse(result, "No Win should be possible at 2,1")
+
+		result = dm.isWinningMoveFrom(row: 2, column: 2, gamePiece: .P2_SERVER)
+		XCTAssertFalse(result, "No Win should be possible at 2,2")
+
+		result = dm.isWinningMoveFrom(row: 2, column: 3, gamePiece: .PLAYER_1)
+		XCTAssertFalse(result, "No Win should be possible at 2,3")
+
+
+		// Row 4
+		result = dm.isWinningMoveFrom(row: 3, column: 0, gamePiece: .PLAYER_1)
+		XCTAssertFalse(result, "No Win should be possible at 3,0")
+
+		result = dm.isWinningMoveFrom(row: 3, column: 1, gamePiece: .P2_SERVER)
+		XCTAssertFalse(result, "No Win should be possible at 33,1")
+
+		result = dm.isWinningMoveFrom(row: 3, column: 2, gamePiece: .P2_SERVER)
+		XCTAssertFalse(result, "No Win should be possible at 3,2")
+
+		result = dm.isWinningMoveFrom(row: 3, column: 3, gamePiece: .PLAYER_1)
+		XCTAssertFalse(result, "No Win should be possible at 3,3")
 
 
 	}
@@ -594,7 +634,7 @@ class _98Point6_DataManager_Tests: XCTestCase {
 	/**
 	Any moves Left?
 	*/
-	func testDataManager_14() {
+	func testDataManager_15() {
 		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
 
 		let mockNetworkData = [
@@ -615,7 +655,7 @@ class _98Point6_DataManager_Tests: XCTestCase {
 	/**
 	Any moves Left?
 	*/
-	func testDataManager_15() {
+	func testDataManager_16() {
 		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
 
 		let mockNetworkData = [
@@ -637,7 +677,7 @@ class _98Point6_DataManager_Tests: XCTestCase {
 	/**
 	Any moves Left?
 	*/
-	func testDataManager_16() {
+	func testDataManager_17() {
 		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
 
 		let mockNetworkData = [Int]()
