@@ -8,49 +8,10 @@
 import UIKit
 
 
-
-class TokenView: UIImageView {
-
-	let blueImage = #imageLiteral(resourceName: "BLUE_TOKEN")
-	let redImage = #imageLiteral(resourceName: "RED_TOKEN")
-	let emptyImage = #imageLiteral(resourceName: "EMPTY_TOKEN")
-
-	var currentPiece = GamePiece.EMPTY {
-		didSet {
-			switch currentPiece {
-				case .EMPTY:
-					self.image = emptyImage
-					self.accessibilityLabel = ""
-					self.setNeedsDisplay()
-				case .PLAYER_1:
-					self.image = redImage
-					self.accessibilityLabel = "RED"
-					self.setNeedsDisplay()
-				case .PLAYER_2:
-					self.image = blueImage
-					self.accessibilityLabel = "BLUE"
-					self.setNeedsDisplay()
-			}
-		}
-	}
-
-	init() {
-		super.init(frame: CGRect.zero)
-		self.isUserInteractionEnabled = false
-		self.isAccessibilityElement = false
-		self.accessibilityLabel = "TOKEN"
-
-	}
-
-	required init?(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-
-}
-
-
 /**
 [This is smart](https://stackoverflow.com/a/53601585/9760718)
+
+No more Selectors
 */
 class BindableGestureRecognizer: UITapGestureRecognizer {
 	private var action: () -> Void
@@ -67,9 +28,6 @@ class BindableGestureRecognizer: UITapGestureRecognizer {
 }
 
 
-
-
-
 class ViewController: UIViewController {
 
 	// MARK: - Properties
@@ -77,18 +35,19 @@ class ViewController: UIViewController {
 	@IBOutlet weak var infoButton: UIButton!
 	@IBOutlet weak var gameField: UIView!
 
-	var gameFieldStackView = UIStackView()
 
+	// MARK: UI Properties
+
+	var gameFieldStackView = UIStackView()
 	var numberOfColumns = 4
 	var numberOfRows = 4
-
 	var columnWidth: CGFloat = 0.0
 	var columnHeight: CGFloat = 0.0
-
 	var cellWidth: CGFloat = 0.0
 	var cellHeight: CGFloat = 0.0
 
-
+	var dataManager: GameDataManager?
+	var networking = Networking()
 
 
 	// MARK: - View Life Cycle
@@ -96,6 +55,8 @@ class ViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view.
+
+		dataManager = GameDataManager(numberOfColumns: numberOfColumns, numberOfRows: numberOfRows)
 
 		print("gameField.frame: \(gameField.frame)")
 
@@ -105,20 +66,45 @@ class ViewController: UIViewController {
 		cellWidth = columnWidth
 		cellHeight = columnHeight / CGFloat(numberOfRows)
 
-		setupRowStackView()
+		setupGameFieldStackView()
+
+		networking.networkDelegate = self
 
 	}
 
-
 	override func viewWillAppear(_ animated: Bool) {
 		updateCellAt(column: 0, row: 0, withPiece: .PLAYER_1)
+		updateCellAt(column: 0, row: 1, withPiece: .PLAYER_1)
+		updateCellAt(column: 0, row: 2, withPiece: .PLAYER_1)
+
+//		updateCellAt(column: 0, row: 1, withPiece: .PLAYER_2)
+//		updateCellAt(column: 0, row: 2, withPiece: .PLAYER_1)
+//
+//		let currentMoves = [0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3]
+//
+//		networking.getNewMovesWithMoves(currentMoves) { (result) in
+//			switch result {
+//				case .SUCCESS(let theData):
+//					print("theData \(theData)")
+//				case .NO_MORE_MOVES:
+//					print("No More Moves")
+//				case .FAILURE(let theError):
+//					print("theError \(theError)")
+//			}
+//		}
+
+
+//		let winning = isWinningMoveFrom(row: 2, column: 0, gamePiece: .PLAYER_1)
 
 	}
 
 
 	// MARK: - Class Methods
 
-	func setupRowStackView() {
+	/**
+	Setups up the horizontal gamefield Stack View
+	*/
+	func setupGameFieldStackView() {
 		gameFieldStackView.translatesAutoresizingMaskIntoConstraints = false
 		gameFieldStackView.axis = .horizontal
 		gameFieldStackView.distribution = .fillEqually
@@ -138,7 +124,17 @@ class ViewController: UIViewController {
 
 
 
+
+
+	/**
+	Create a Vertical Stack View Column of Cells
+
+	- Parameter number: Int
+	- Returns: UIView
+	*/
 	func createColumn(number: Int) -> UIView {
+
+		// Create cells for Column
 		var cellsInColumn = [UIView]()
 
 		for _ in 0..<numberOfRows {
@@ -152,18 +148,21 @@ class ViewController: UIViewController {
 			cellsInColumn.append(newCell)
 		}
 
-		let columnStackView = UIStackView(arrangedSubviews: cellsInColumn)
+		// Create Column
+		let columnStackView = ColumnStackView(arrangedSubviews: cellsInColumn)
 		columnStackView.axis = .vertical
 		columnStackView.distribution = .fillEqually
+		columnStackView.cellViews = cellsInColumn
+		columnStackView.columnNumber = number
 		columnStackView.accessibilityTraits = .button
-		columnStackView.accessibilityLabel = "Column \(String(describing: number))"
+		columnStackView.accessibilityLabel = "Column \(String(describing: columnStackView.columnNumber))"
 
 
+		// Add Interaction
 		let tap = BindableGestureRecognizer {
 			let columnNumber = number
 			print("tapped \(columnNumber)")
 		}
-
 		columnStackView.addGestureRecognizer(tap)
 
 		return columnStackView
@@ -171,12 +170,14 @@ class ViewController: UIViewController {
 	}
 
 	@objc
+	/**
+	What happens when you tap a column,
+	*/
 	func tappedColumn() {
 
 		print("Column Tapped")
 
 	}
-
 
 
 	/**
@@ -187,10 +188,8 @@ class ViewController: UIViewController {
 	- Parameter gamePiece: GamePiece
 	*/
 	func updateCellAt(column: Int, row: Int, withPiece gamePiece: GamePiece) {
-		let uiRowNumber = numberOfRows - row - 1
-		let columnView = gameFieldStackView.arrangedSubviews[column] as! UIStackView
-		let cell = columnView.arrangedSubviews[uiRowNumber] as! TokenView
-		cell.currentPiece = gamePiece
+		let columnStackView = gameFieldStackView.arrangedSubviews[column] as! ColumnStackView
+		columnStackView.updateCellInRow(row, withGamePiece: gamePiece)
 	}
 
 
@@ -205,13 +204,12 @@ class ViewController: UIViewController {
 		}
 	}
 
-
-
 }
 
 
 
 extension ViewController: NetworkingDelagate {
 	func reportTheReturnedMoves(_ moves: [Int]) {
+		print("moves: \(moves)")
 	}
 }

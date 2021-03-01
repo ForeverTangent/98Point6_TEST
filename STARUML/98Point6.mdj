@@ -8426,7 +8426,8 @@
 									"_parent": {
 										"$ref": "AAAAAAF32wNvY0/qJX4="
 									},
-									"name": "Column"
+									"name": "Column",
+									"type": ""
 								}
 							]
 						},
@@ -8835,7 +8836,8 @@
 									"_parent": {
 										"$ref": "AAAAAAF32w7wI1Y+vJ4="
 									},
-									"name": "[Int] moves"
+									"name": "[Int] moves",
+									"type": ""
 								}
 							]
 						}
@@ -9023,7 +9025,8 @@
 							"_parent": {
 								"$ref": "AAAAAAF32tTGeBDr9KQ="
 							},
-							"name": "isPlayerOdd"
+							"name": "isPlayerOdd",
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
@@ -9031,7 +9034,8 @@
 							"_parent": {
 								"$ref": "AAAAAAF32tTGeBDr9KQ="
 							},
-							"name": "currentPlayer"
+							"name": "currentPlayer",
+							"type": ""
 						}
 					],
 					"operations": [
@@ -9049,7 +9053,8 @@
 									"_parent": {
 										"$ref": "AAAAAAF32tUxMxIVYRk="
 									},
-									"name": "[[Int]] gameUIData"
+									"name": "[[Int]] gameUIData",
+									"type": ""
 								},
 								{
 									"_type": "UMLParameter",

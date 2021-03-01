@@ -13,6 +13,14 @@ protocol NetworkingDelagate {
 }
 
 
+enum MoveReults<Value> {
+	case SUCCESS(Value)
+	case NO_MORE_MOVES
+	case FAILURE(Error)
+}
+
+
+
 /**
 I have to admin, this isn't the best networking, but the return data from the server isn't exactly standard.
 */
@@ -23,88 +31,72 @@ class Networking {
 	let defaultSession = URLSession(configuration: .default)
 	var dataTask: URLSessionDataTask?
 	let baseURLString = "https://w0ayb2ph1k.execute-api.us-west-2.amazonaws.com/production?moves="
-
-	// MARK: - Inits (None)
+	var networkDelegate: NetworkingDelagate?
 
 
 	// MARK: - Class Methods
 
 	/**
 	Helper to Convert Moves
+
+	Techincally this function is redundant but it helps me think through everything.
+	- Parameter moves: [Int]
+	- Returns: a String
 	*/
 	private func convertToStringTheMoves(_ moves: [Int]) -> String {
-		guard !moves.isEmpty else { return "[]" }
-		guard moves.count > 1 else { return "[\(moves[0])]" }
-		var results = "[\(String(moves[0]))"
-		for moveIndex in 1..<moves.count {
-			results += ",\(String(moves[moveIndex]))"
-		}
-		results += "]"
-		return results
+		guard let theString = try? moves.jsonString() else { return "" }
+		return theString
 	}
 
 
 	/**
 	Helper to Convert Moves
+
+	Techincally this function is redundant but it helps me think through everything.
+	- Parameter intArrayString: String
+	- Returns: [Int]
 	*/
 	private func convertToMovesTheString(_ intArrayString: String) -> [Int] {
-
-		var localString = intArrayString
-
-		guard let leftBracIndex = localString.firstIndex(of: "[") else { return [Int]() }
-		localString.remove(at: leftBracIndex)
-
-		guard let rightBracIndex = localString.firstIndex(of: "]")else { return [Int]() }
-		localString.remove(at: rightBracIndex)
-
-		let splits = localString.split(separator: ",")
-
-		var results = [Int]()
-
-		for element in splits {
-			if let theInt = Int(element) {
-				results.append(theInt)
-			}
-		}
-
-		return results
-
+		guard let asdf = try? Array(intArrayString) else { return [Int]() }
+		return asdf
 	}
 
 
-
 	/**
+	Get the new moves from the server
 
+	- Parameter moves: [Int], current moves list
+	- Parameter completion: @escaping (MoveReults<[Int]>) -> Void
 	*/
-	func pingServerWithMoves(_ moves: [Int], completion: @escaping (String) -> String) {
-
-		guard var theDataTask = dataTask else { return }
+	func getNewMovesWithMoves(_ moves: [Int], completion: @escaping (MoveReults<[Int]>) -> Void) {
 
 		let movesAsString = convertToStringTheMoves(moves)
-
 		let theURLString = "\(baseURLString)\(movesAsString)"
 
-		theDataTask.cancel()
-		if let theUrl = URL(string: theURLString) {
-			theDataTask = defaultSession.dataTask(with: theUrl) { [weak self] data, response, error in
+		dataTask?.cancel()
 
+		if let theUrl = URL(string: theURLString) {
+			dataTask = defaultSession.dataTask(with: theUrl) { [weak self] data, response, error in
+				guard let self = self else { return }
 				defer {
-					self?.dataTask = nil
+					self.dataTask = nil
 				}
 				if let theError = error {
 					print("theError: \(theError)")
+					completion(.FAILURE(theError))
 				} else if
 					let theData = data {
-
 					let stringInt = String(decoding: theData, as: UTF8.self)
-					print("stringInt: \(stringInt)")
-
-					let results = completion(stringInt)
-					print("results: \(results)")
-
+					if stringInt.contains("No moves left") {
+						completion(.NO_MORE_MOVES)
+					}
+					let intArray = self.convertToMovesTheString(stringInt)
+					completion(.SUCCESS(intArray))
 				}
 			}
-			theDataTask.resume()
+
+			dataTask?.resume()
+
 		}
 
 	}

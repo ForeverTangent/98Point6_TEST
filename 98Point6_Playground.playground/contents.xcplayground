@@ -4,5 +4,6 @@
         <page name='SAMPLE_1'/>
         <page name='SAMPLE_2'/>
         <page name='UI'/>
+        <page name='State'/>
     </pages>
 </playground>

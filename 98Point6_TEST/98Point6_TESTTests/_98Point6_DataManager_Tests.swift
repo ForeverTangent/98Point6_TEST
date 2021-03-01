@@ -14,7 +14,7 @@ class _98Point6_DataManager_Tests: XCTestCase {
 	Testing Insert Piece
 	*/
 	func testDataManager_1_1() {
-		let dm = DataManager(numberOfColumns: 4, numberOfRows: 4)
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
 
 		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
 		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
@@ -33,7 +33,7 @@ class _98Point6_DataManager_Tests: XCTestCase {
 	}
 
 	func testDataManager_1_2() {
-		let dm = DataManager(numberOfColumns: 4, numberOfRows: 4)
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
 
 		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
 		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_2, intoColumn: 0))
@@ -53,7 +53,7 @@ class _98Point6_DataManager_Tests: XCTestCase {
 
 
 	func testDataManager_1_3() {
-		let dm = DataManager(numberOfColumns: 4, numberOfRows: 4)
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
 
 		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
 		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_2, intoColumn: 0))
@@ -81,7 +81,7 @@ class _98Point6_DataManager_Tests: XCTestCase {
 	Test Get Column Data
 	*/
 	func testDataManager_2() {
-		let dm = DataManager(numberOfColumns: 4, numberOfRows: 4)
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
 
 		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
 		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_2, intoColumn: 0))
@@ -99,7 +99,7 @@ class _98Point6_DataManager_Tests: XCTestCase {
 	Insert from Network Data
 	*/
 	func testDataManager_3() {
-		let dm = DataManager(numberOfColumns: 4, numberOfRows: 4)
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
 
 		let mockNetworkData = [0, 1, 2, 0, 1, 0]
 
@@ -117,6 +117,72 @@ class _98Point6_DataManager_Tests: XCTestCase {
 		XCTAssertTrue(data == targetData1, "data != targetData")
 
 	}
+
+
+
+	/**
+	Insert from Network Data
+	*/
+	func testDataManager_4() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let mockNetworkData = [0, 1, 2, 0, 1, 2]
+
+		dm.updateGameUIDataWithNetworkData(mockNetworkData)
+
+		let data = dm.gameUIData
+		print(data)
+		
+		let outGoingData = dm.getDataForNetwork()
+		print(outGoingData)
+
+		XCTAssertTrue(outGoingData == mockNetworkData, "\(outGoingData) != \(mockNetworkData)")
+
+	}
+
+
+	/**
+	Insert from Network Data
+	*/
+	func testDataManager_5() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let mockNetworkData = [0, 1, 2, 3, 3, 2, 1, 0]
+
+		dm.updateGameUIDataWithNetworkData(mockNetworkData)
+
+		let data = dm.gameUIData
+		print(data)
+
+		let outGoingData = dm.getDataForNetwork()
+		print(outGoingData)
+
+		let target = [0, 1, 2, 3, 1, 0, 3, 2] // Target Data order is different but data is same as mockData
+
+		XCTAssertTrue(outGoingData == target, "\(outGoingData) != \(target)")
+
+	}
+
+
+	/**
+	Insert from Network Data
+	*/
+	func testDataManager_6() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let mockNetworkData = [0, 1, 2, 0, 1]
+
+		dm.updateGameUIDataWithNetworkData(mockNetworkData)
+
+		let data = dm.gameUIData
+		print(data)
+
+		let outGoingData = dm.getDataForNetwork()
+		print(outGoingData)
+
+		XCTAssertTrue(outGoingData == mockNetworkData, "\(outGoingData) != \(mockNetworkData)")
+	}
+
 
 
 
