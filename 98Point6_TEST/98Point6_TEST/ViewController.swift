@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import os
 
 
 /**
@@ -31,6 +32,11 @@ class BindableGestureRecognizer: UITapGestureRecognizer {
 class ViewController: UIViewController {
 
 	// MARK: - Properties
+	private let logger = ViewController.getLoggerFor(category: "ViewController")
+	static func getLoggerFor(category: String) -> Logger {
+		return Logger(subsystem: Bundle.main.bundleIdentifier!, category: category)
+	}
+
 
 	@IBOutlet weak var gameField: UIView!
 
@@ -56,7 +62,7 @@ class ViewController: UIViewController {
 		return columnHeight / CGFloat(ViewController.numberOfRows)
 	}
 
-	var isPlayersTurn = true
+	var isPlayersTurn = false
 
 	var gameDataManager: GameDataManager?
 	var networking = Networking()
@@ -77,6 +83,14 @@ class ViewController: UIViewController {
 
 	override func viewWillAppear(_ animated: Bool) {
 
+//		guard let theGameDataManager = gameDataManager else { return }
+//
+//		updateCellAt(row: 0, column: 0, withPiece: .PLAYER_1)
+//		updateCellAt(row: 1, column: 0, withPiece: .PLAYER_1)
+//		updateCellAt(row: 2, column: 0, withPiece: .PLAYER_1)
+//
+//		print(gameDataManager?.gameUIData)
+
 	}
 
 
@@ -88,7 +102,6 @@ class ViewController: UIViewController {
 
 	// MARK: - Class Methods
 
-
 	func presentPassFirstTurnAlert() {
 		let alert = UIAlertController(title: "Pass?",
 									  message: "Pass first turn?",
@@ -96,31 +109,51 @@ class ViewController: UIViewController {
 		let passFirstTurn = UIAlertAction(title: NSLocalizedString("YES", comment: "Server goes First"),
 										  style: .default,
 										  handler: { _ in
-											NSLog("The player passed, server goes first.")
+											self.logger.debug("The player passed, server goes first.")
+											self.isPlayersTurn = false
 											self.processServersTurn()
 										  })
 		let takeFirstTurn = UIAlertAction(title: NSLocalizedString("NO", comment: "Player goes First"),
 										  style: .default,
 										  handler: { _ in
-											NSLog("The player goes first.")
+											self.logger.debug("The player goes first.")
+											self.isPlayersTurn = true
 										  })
 		alert.addAction(takeFirstTurn)
 		alert.addAction(passFirstTurn)
 		self.present(alert, animated: true, completion: nil)
 	}
 
+	enum GameResult: Int {
+		case WIN
+		case LOSE
+		case DRAW
+	}
 
-	func playAgainAlert() {
-		let alert = UIAlertController(title: "Play again?",
+	func presentGameOverWithResult(_ result: GameResult) {
+		let gameOverMessage: String
+		switch result {
+			case .WIN:
+				gameOverMessage = "You Won!"
+			case .LOSE:
+				gameOverMessage = "You Lost."
+			case .DRAW:
+				gameOverMessage = "It is a draw"
+		}
+
+		let alert = UIAlertController(title: "\(gameOverMessage)",
 									  message: "You want to play again?",
 									  preferredStyle: .alert)
 		let yesPlayAgain = UIAlertAction(title: NSLocalizedString("YES", comment: "Server goes First"),
 										  style: .default,
 										  handler: { _ in
-											NSLog("The player wants to play again.")
+											self.logger.debug("The player wants to play again.")
+											self.clearGame()
 										  })
 		alert.addAction(yesPlayAgain)
-		self.present(alert, animated: true, completion: nil)
+		DispatchQueue.main.async {
+			self.present(alert, animated: true, completion: nil)
+		}
 	}
 
 
@@ -147,22 +180,37 @@ class ViewController: UIViewController {
 
 
 
+	/**
+	Clear game for new round
+	*/
+	func clearGame() {
+		guard let theGameDataManager = gameDataManager else { return }
+
+		clearField()
+		theGameDataManager.clearGameData()
+		presentPassFirstTurnAlert()
+
+	}
+
+	/**
+	Servers Turn
+	*/
 	func processServersTurn() {
 
-		guard let theDataManager = gameDataManager else { return }
+		guard let theGameDataManager = gameDataManager else { return }
 
-		let currentMovesForServer = theDataManager.getDataForNetwork()
-		print(currentMovesForServer)
+		let currentMovesForServer = theGameDataManager.getDataForNetwork()
 
 		networking.getNewMovesWithMoves(currentMovesForServer) { (moveResults) in
 			switch moveResults {
 				case .SUCCESS(let theArray):
-					print("theArray \(theArray)")
-					self.processReturnedMovesArray(theArray)
+					self.processReturnedServerMoveArray(theArray)
+
 				case .NO_MORE_MOVES:
-					print("Must be a draw")
+					self.presentGameOverWithResult(.DRAW)
+
 				case .FAILURE(let theError):
-					print(theError)
+					self.logger.error("\(theError.localizedDescription)")
 			}
 
 		}
@@ -176,54 +224,84 @@ class ViewController: UIViewController {
 	- Parameter intArray: [Int]
 	- Returns: Int
 	*/
-	func processReturnedMovesArray(_ intArray: [Int]) {
+	func processReturnedServerMoveArray(_ intArray: [Int]) {
 		guard
-			let theNewMove = intArray.last,
-			let theGameDataManager = gameDataManager
+			let theGameDataManager = gameDataManager,
+			let theNewMoveColumn = intArray.last
 		else {
 			return
 		}
 
-		let uiLocation: (row: Int, column: Int)
-		let winningMove: Bool
-
-		if isPlayersTurn {
-			uiLocation = theGameDataManager.insertTokenForPlayer(.PLAYER_1, intoColumn: theNewMove)
+		if theGameDataManager.canInsertTokenForPlayer(.P2_SERVER, intoColumn: theNewMoveColumn) {
+			let recentMove = theGameDataManager.insertTokenForPlayer(.P2_SERVER, intoColumn: theNewMoveColumn)
 			DispatchQueue.main.async {
-				self.updateCellAt(row: uiLocation.row, column: uiLocation.column, withPiece: .PLAYER_1)
+				self.updateCellAt(row: recentMove.row, column: recentMove.column, withPiece: .P2_SERVER)
 			}
-			winningMove = theGameDataManager.isWinningMoveFrom(row: uiLocation.row,
-															   column: uiLocation.column,
-															   gamePiece: .PLAYER_1)
-		} else {
-			uiLocation = theGameDataManager.insertTokenForPlayer(.PLAYER_1, intoColumn: theNewMove)
-			DispatchQueue.main.async {
-				self.updateCellAt(row: uiLocation.row, column: uiLocation.column, withPiece: .PLAYER_2)
+			let isWinningMove = theGameDataManager.isWinningMoveFrom(row: recentMove.row,
+																	 column: recentMove.column,
+																	 gamePiece: .P2_SERVER)
+			if isWinningMove {
+				presentGameOverWithResult(.LOSE)
 			}
-			winningMove = theGameDataManager.isWinningMoveFrom(row: uiLocation.row,
-															   column: uiLocation.column,
-															   gamePiece: .PLAYER_2)
+			if !isGameADraw() {
+				print("PLAYERS TURN")
+			}
 		}
 
-		print("uiLocation \(uiLocation)")
-		print("theNewMove: \(theNewMove)")
-		print("winningMove \(winningMove)")
+		isPlayersTurn = true
 
-		
 	}
 
 
 
+	/**
+	Process the Player's Selcetion
+	- Parameter column: Int
+	*/
 	func processPlayersSelectionOfColumn(_ column: Int) {
 
+		guard let theGameDataManager = gameDataManager else { return }
+
+
+
+		if theGameDataManager.canInsertTokenForPlayer(.PLAYER_1, intoColumn: column) {
+			isPlayersTurn = false
+			let recentMove = theGameDataManager.insertTokenForPlayer(.PLAYER_1, intoColumn: column)
+			DispatchQueue.main.async {
+				self.updateCellAt(row: recentMove.row, column: recentMove.column, withPiece: .PLAYER_1)
+			}
+			let isWinningMove = theGameDataManager.isWinningMoveFrom(row: recentMove.row,
+																	 column: recentMove.column,
+																	 gamePiece: .PLAYER_1)
+			if isWinningMove {
+				presentGameOverWithResult(.WIN)
+			}
+			if !isGameADraw() {
+				print("SERVERS TURN")
+				processServersTurn()
+			}
+		}
+
 	}
 
 
+	/**
+	Check if the game is a tie.
+	*/
+	func isGameADraw() -> Bool {
+		guard
+			let theGameDataManager = gameDataManager
+		else {
+			return false
+		}
 
-	func gameIsADraw() {
-		
+		if !theGameDataManager.areAnyPossibleMovesLeft {
+			presentGameOverWithResult(.DRAW)
+			return true
+		}
+
+		return false
 	}
-
 
 
 
@@ -263,6 +341,9 @@ class ViewController: UIViewController {
 		let tap = BindableGestureRecognizer {
 			let columnNumber = number
 			print("tapped \(columnNumber)")
+			if self.isPlayersTurn {
+				self.processPlayersSelectionOfColumn(columnNumber)
+			}
 		}
 		columnStackView.addGestureRecognizer(tap)
 
@@ -306,11 +387,3 @@ class ViewController: UIViewController {
 	}
 
 }
-
-
-
-//extension ViewController: NetworkingDelagate {
-//	func reportTheReturnedMoves(_ moves: [Int]) {
-//		print("moves: \(moves)")
-//	}
-//}

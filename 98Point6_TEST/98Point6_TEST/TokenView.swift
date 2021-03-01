@@ -24,7 +24,7 @@ class TokenView: UIImageView {
 					self.image = redImage
 					self.accessibilityLabel = "RED"
 					self.setNeedsDisplay()
-				case .PLAYER_2:
+				case .P2_SERVER:
 					self.image = blueImage
 					self.accessibilityLabel = "BLUE"
 					self.setNeedsDisplay()

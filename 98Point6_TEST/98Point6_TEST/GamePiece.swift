@@ -10,7 +10,7 @@ import Foundation
 enum GamePiece: Int {
 	case EMPTY
 	case PLAYER_1
-	case PLAYER_2
+	case P2_SERVER
 }
 
 extension GamePiece: CustomStringConvertible {
@@ -20,7 +20,7 @@ extension GamePiece: CustomStringConvertible {
 				return "E"
 			case .PLAYER_1:
 				return "1"
-			case .PLAYER_2:
+			case .P2_SERVER:
 				return "2"
 		}
 	}
