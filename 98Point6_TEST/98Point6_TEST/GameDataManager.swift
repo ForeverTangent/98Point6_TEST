@@ -14,6 +14,8 @@ class GameDataManager {
 
 	// MARK: - Properties
 
+	private let logger = ViewController.getLoggerFor(category: "GameDataManager")
+
 	private var numberOfColumns: Int
 	private var numberOfRows: Int
 
@@ -60,7 +62,6 @@ class GameDataManager {
 	func clearGameData() {
 		self.gameUIData = Array(repeating: Array(repeating: GamePiece.EMPTY, count: numberOfColumns), count: numberOfRows)
 		tokensEntered = 0
-//		print(self.gameUIData)
 	}
 
 
@@ -117,6 +118,12 @@ class GameDataManager {
 	}
 
 
+	/**
+	Can we insert token )before we do?
+	- Parameter player: GamePiece
+	- Parameter columnIndex: Int
+	- Returns Bool
+	*/
 	func canInsertTokenForPlayer(_ player: GamePiece, intoColumn columnIndex: Int) -> Bool {
 		let columnData = getDataForColumn(columnIndex)
 		if columnData.firstIndex(of: .EMPTY) != nil {
@@ -222,7 +229,14 @@ class GameDataManager {
 	}
 
 
+	/**
+	Check Down
 
+	- Parameter row: Int, (row of where piece places.
+	- Parameter column:Int,  (column of where piece places.
+	- Parameter gamePiece: GamePiece,
+	- Returns: Bool
+	*/
 	private func checkingDown(row: Int,
 							  column:Int,
 							  gamePiece: GamePiece,
@@ -251,7 +265,14 @@ class GameDataManager {
 	}
 
 
+	/**
+	Check Left to right and back
 
+	- Parameter row: Int, (row of where piece places.
+	- Parameter column:Int,  (column of where piece places.
+	- Parameter gamePiece: GamePiece,
+	- Returns: Bool
+	*/
 	private func checkingLeftRight(row: Int,
 								   column:Int,
 								   gamePiece: GamePiece,
@@ -292,6 +313,10 @@ class GameDataManager {
 	/**
 	Diagonal -> \
 
+	- Parameter row: Int, (row of where piece places.
+	- Parameter column:Int,  (column of where piece places.
+	- Parameter gamePiece: GamePiece,
+	- Returns: Bool
 	*/
 	private func checkingDiagonal1(row: Int,
 								   column:Int,
@@ -332,6 +357,10 @@ class GameDataManager {
 	/**
 	Diagonal -> /
 
+	- Parameter row: Int, (row of where piece places.
+	- Parameter column:Int,  (column of where piece places.
+	- Parameter gamePiece: GamePiece,
+	- Returns: Bool
 	*/
 	private func checkingDiagonal2(row: Int,
 								   column:Int,
@@ -390,7 +419,7 @@ class GameDataManager {
 		if checkingDown(row: row,
 						column: column,
 						gamePiece: gamePiece) {
-			print("Won Via down starting at \(row), \(column) with \(gamePiece.rawValue)")
+			logger.debug("Won Via down starting at \(row), \(column) with \(gamePiece.rawValue)")
 			return true
 		}
 
@@ -398,7 +427,7 @@ class GameDataManager {
 		if checkingLeftRight(row: row,
 							 column: column,
 							 gamePiece: gamePiece) {
-			print("Won Via checkingLeftRight starting at \(row), \(column) with \(gamePiece.rawValue)")
+			logger.debug("Won Via checkingLeftRight starting at \(row), \(column) with \(gamePiece.rawValue)")
 			return true
 		}
 
@@ -406,7 +435,7 @@ class GameDataManager {
 		if checkingDiagonal1(row: row,
 							 column: column,
 							 gamePiece: gamePiece) {
-			print("Won Via checkingDiagonal1 starting at \(row), \(column) with \(gamePiece.rawValue)")
+			logger.debug("Won Via checkingDiagonal1 starting at \(row), \(column) with \(gamePiece.rawValue)")
 			return true
 		}
 
@@ -414,7 +443,7 @@ class GameDataManager {
 		if checkingDiagonal2(row: row,
 							 column: column,
 							 gamePiece: gamePiece) {
-			print("Won Via checkingDiagonal2 starting at \(row), \(column) with \(gamePiece.rawValue)")
+			logger.debug("Won Via checkingDiagonal2 starting at \(row), \(column) with \(gamePiece.rawValue)")
 			return true
 		}
 

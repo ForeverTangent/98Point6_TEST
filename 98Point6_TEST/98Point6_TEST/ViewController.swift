@@ -242,7 +242,7 @@ class ViewController: UIViewController {
 				presentGameOverWithResult(.DRAW)
 			}
 		}
-		print("PLAYERS TURN")
+		logger.debug("PLAYERS TURN")
 		isPlayersTurn = true
 
 	}
@@ -256,8 +256,6 @@ class ViewController: UIViewController {
 	func processPlayersSelectionOfColumn(_ column: Int) {
 
 		guard let theGameDataManager = gameDataManager else { return }
-
-
 
 		if theGameDataManager.canInsertTokenForPlayer(.PLAYER_1, intoColumn: column) {
 			isPlayersTurn = false
@@ -275,7 +273,7 @@ class ViewController: UIViewController {
 				presentGameOverWithResult(.DRAW)
 			}
 
-			print("SERVERS TURN")
+			logger.debug("SERVERS TURN")
 			processServersTurn()
 		} else {
 			UIAccessibility.post(notification: .announcement, argument: "COLUMN FULL")
@@ -339,7 +337,7 @@ class ViewController: UIViewController {
 		// Add Interaction
 		let tap = BindableGestureRecognizer {
 			let columnNumber = number
-			print("tapped \(columnNumber)")
+			self.logger.debug("tapped \(columnNumber)")
 			if self.isPlayersTurn {
 				self.processPlayersSelectionOfColumn(columnNumber)
 			}
