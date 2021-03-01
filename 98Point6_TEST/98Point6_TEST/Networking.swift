@@ -8,11 +8,15 @@
 import Foundation
 
 
-protocol NetworkingDelagate {
-	func reportTheReturnedMoves(_ moves: [Int])
-}
+// Decided to skip the delegate approach
+//protocol NetworkingDelagate {
+//	func reportTheReturnedMoves(_ moves: [Int])
+//}
 
 
+/**
+Prossible logical results we get from talking to the server
+*/
 enum MoveReults<Value> {
 	case SUCCESS(Value)
 	case NO_MORE_MOVES
@@ -22,7 +26,7 @@ enum MoveReults<Value> {
 
 
 /**
-I have to admin, this isn't the best networking, but the return data from the server isn't exactly standard.
+I have to admit, this isn't the best networking, but gets the job done.
 */
 class Networking {
 
@@ -31,7 +35,7 @@ class Networking {
 	let defaultSession = URLSession(configuration: .default)
 	var dataTask: URLSessionDataTask?
 	let baseURLString = "https://w0ayb2ph1k.execute-api.us-west-2.amazonaws.com/production?moves="
-	var networkDelegate: NetworkingDelagate?
+//	var networkDelegate: NetworkingDelagate?
 
 
 	// MARK: - Class Methods

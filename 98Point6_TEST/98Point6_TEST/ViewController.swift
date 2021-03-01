@@ -32,21 +32,33 @@ class ViewController: UIViewController {
 
 	// MARK: - Properties
 
-	@IBOutlet weak var infoButton: UIButton!
 	@IBOutlet weak var gameField: UIView!
 
 
 	// MARK: UI Properties
 
-	var gameFieldStackView = UIStackView()
-	var numberOfColumns = 4
-	var numberOfRows = 4
-	var columnWidth: CGFloat = 0.0
-	var columnHeight: CGFloat = 0.0
-	var cellWidth: CGFloat = 0.0
-	var cellHeight: CGFloat = 0.0
+	private var gameFieldStackView = UIStackView()
 
-	var dataManager: GameDataManager?
+	static var numberOfColumns = 4
+	static var numberOfRows = 4
+	static var numberOfMatches = 4
+
+	var columnWidth: CGFloat {
+		return gameField.frame.width / CGFloat(ViewController.numberOfColumns)
+	}
+	var columnHeight: CGFloat {
+		return gameField.frame.width
+	}
+	var cellWidth: CGFloat {
+		return columnWidth
+	}
+	var cellHeight: CGFloat {
+		return columnHeight / CGFloat(ViewController.numberOfRows)
+	}
+
+	var isPlayersTurn = true
+
+	var gameDataManager: GameDataManager?
 	var networking = Networking()
 
 
@@ -56,50 +68,61 @@ class ViewController: UIViewController {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view.
 
-		dataManager = GameDataManager(numberOfColumns: numberOfColumns, numberOfRows: numberOfRows)
-
-		print("gameField.frame: \(gameField.frame)")
-
-		columnWidth = gameField.frame.width / CGFloat(numberOfColumns)
-		columnHeight = gameField.frame.width
-
-		cellWidth = columnWidth
-		cellHeight = columnHeight / CGFloat(numberOfRows)
-
+		gameDataManager = GameDataManager(numberOfColumns: ViewController.numberOfColumns,
+										  numberOfRows: ViewController.numberOfRows)
 		setupGameFieldStackView()
-
-		networking.networkDelegate = self
+//		networking.networkDelegate = self
 
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
-		updateCellAt(column: 0, row: 0, withPiece: .PLAYER_1)
-		updateCellAt(column: 0, row: 1, withPiece: .PLAYER_1)
-		updateCellAt(column: 0, row: 2, withPiece: .PLAYER_1)
-
-//		updateCellAt(column: 0, row: 1, withPiece: .PLAYER_2)
-//		updateCellAt(column: 0, row: 2, withPiece: .PLAYER_1)
-//
-//		let currentMoves = [0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3]
-//
-//		networking.getNewMovesWithMoves(currentMoves) { (result) in
-//			switch result {
-//				case .SUCCESS(let theData):
-//					print("theData \(theData)")
-//				case .NO_MORE_MOVES:
-//					print("No More Moves")
-//				case .FAILURE(let theError):
-//					print("theError \(theError)")
-//			}
-//		}
-
-
-//		let winning = isWinningMoveFrom(row: 2, column: 0, gamePiece: .PLAYER_1)
 
 	}
 
 
+	override func viewDidAppear(_ animated: Bool) {
+		presentPassFirstTurnAlert()
+	}
+
+
+
 	// MARK: - Class Methods
+
+
+	func presentPassFirstTurnAlert() {
+		let alert = UIAlertController(title: "Pass?",
+									  message: "Pass first turn?",
+									  preferredStyle: .alert)
+		let passFirstTurn = UIAlertAction(title: NSLocalizedString("YES", comment: "Server goes First"),
+										  style: .default,
+										  handler: { _ in
+											NSLog("The player passed, server goes first.")
+											self.processServersTurn()
+										  })
+		let takeFirstTurn = UIAlertAction(title: NSLocalizedString("NO", comment: "Player goes First"),
+										  style: .default,
+										  handler: { _ in
+											NSLog("The player goes first.")
+										  })
+		alert.addAction(takeFirstTurn)
+		alert.addAction(passFirstTurn)
+		self.present(alert, animated: true, completion: nil)
+	}
+
+
+	func playAgainAlert() {
+		let alert = UIAlertController(title: "Play again?",
+									  message: "You want to play again?",
+									  preferredStyle: .alert)
+		let yesPlayAgain = UIAlertAction(title: NSLocalizedString("YES", comment: "Server goes First"),
+										  style: .default,
+										  handler: { _ in
+											NSLog("The player wants to play again.")
+										  })
+		alert.addAction(yesPlayAgain)
+		self.present(alert, animated: true, completion: nil)
+	}
+
 
 	/**
 	Setups up the horizontal gamefield Stack View
@@ -115,13 +138,91 @@ class ViewController: UIViewController {
 		gameFieldStackView.trailingAnchor.constraint(equalTo: gameField.trailingAnchor, constant: 0.0).isActive = true
 		gameFieldStackView.bottomAnchor.constraint(equalTo: gameField.bottomAnchor, constant: 0.0).isActive = true
 
-		for index in 0..<numberOfColumns {
+		for index in 0..<ViewController.numberOfColumns {
 			let newColumn = createColumn(number: index)
 			gameFieldStackView.addArrangedSubview(newColumn)
 		}
 
 	}
 
+
+
+	func processServersTurn() {
+
+		guard let theDataManager = gameDataManager else { return }
+
+		let currentMovesForServer = theDataManager.getDataForNetwork()
+		print(currentMovesForServer)
+
+		networking.getNewMovesWithMoves(currentMovesForServer) { (moveResults) in
+			switch moveResults {
+				case .SUCCESS(let theArray):
+					print("theArray \(theArray)")
+					self.processReturnedMovesArray(theArray)
+				case .NO_MORE_MOVES:
+					print("Must be a draw")
+				case .FAILURE(let theError):
+					print(theError)
+			}
+
+		}
+
+	}
+
+
+	/**
+	Picks off new move from server and processes it.
+
+	- Parameter intArray: [Int]
+	- Returns: Int
+	*/
+	func processReturnedMovesArray(_ intArray: [Int]) {
+		guard
+			let theNewMove = intArray.last,
+			let theGameDataManager = gameDataManager
+		else {
+			return
+		}
+
+		let uiLocation: (row: Int, column: Int)
+		let winningMove: Bool
+
+		if isPlayersTurn {
+			uiLocation = theGameDataManager.insertTokenForPlayer(.PLAYER_1, intoColumn: theNewMove)
+			DispatchQueue.main.async {
+				self.updateCellAt(row: uiLocation.row, column: uiLocation.column, withPiece: .PLAYER_1)
+			}
+			winningMove = theGameDataManager.isWinningMoveFrom(row: uiLocation.row,
+															   column: uiLocation.column,
+															   gamePiece: .PLAYER_1)
+		} else {
+			uiLocation = theGameDataManager.insertTokenForPlayer(.PLAYER_1, intoColumn: theNewMove)
+			DispatchQueue.main.async {
+				self.updateCellAt(row: uiLocation.row, column: uiLocation.column, withPiece: .PLAYER_2)
+			}
+			winningMove = theGameDataManager.isWinningMoveFrom(row: uiLocation.row,
+															   column: uiLocation.column,
+															   gamePiece: .PLAYER_2)
+		}
+
+		print("uiLocation \(uiLocation)")
+		print("theNewMove: \(theNewMove)")
+		print("winningMove \(winningMove)")
+
+		
+	}
+
+
+
+	func processPlayersSelectionOfColumn(_ column: Int) {
+
+	}
+
+
+
+	func gameIsADraw() {
+		
+	}
 
 
 
@@ -137,7 +238,7 @@ class ViewController: UIViewController {
 		// Create cells for Column
 		var cellsInColumn = [UIView]()
 
-		for _ in 0..<numberOfRows {
+		for _ in 0..<ViewController.numberOfRows {
 			let newCell = TokenView()
 			newCell.translatesAutoresizingMaskIntoConstraints = false
 			newCell.currentPiece = .EMPTY
@@ -187,7 +288,7 @@ class ViewController: UIViewController {
 	- Parameter row: Int
 	- Parameter gamePiece: GamePiece
 	*/
-	func updateCellAt(column: Int, row: Int, withPiece gamePiece: GamePiece) {
+	func updateCellAt(row: Int, column: Int, withPiece gamePiece: GamePiece) {
 		let columnStackView = gameFieldStackView.arrangedSubviews[column] as! ColumnStackView
 		columnStackView.updateCellInRow(row, withGamePiece: gamePiece)
 	}
@@ -197,9 +298,9 @@ class ViewController: UIViewController {
 	Clears the playing Field for next game.
 	*/
 	func clearField() {
-		for column in 0..<numberOfColumns {
-			for row in 0..<numberOfRows {
-				updateCellAt(column: column, row: row, withPiece: .EMPTY)
+		for column in 0..<ViewController.numberOfColumns {
+			for row in 0..<ViewController.numberOfRows {
+				updateCellAt(row: column, column: row, withPiece: .EMPTY)
 			}
 		}
 	}
@@ -208,8 +309,8 @@ class ViewController: UIViewController {
 
 
 
-extension ViewController: NetworkingDelagate {
-	func reportTheReturnedMoves(_ moves: [Int]) {
-		print("moves: \(moves)")
-	}
-}
+//extension ViewController: NetworkingDelagate {
+//	func reportTheReturnedMoves(_ moves: [Int]) {
+//		print("moves: \(moves)")
+//	}
+//}

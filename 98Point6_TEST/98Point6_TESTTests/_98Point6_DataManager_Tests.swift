@@ -16,9 +16,12 @@ class _98Point6_DataManager_Tests: XCTestCase {
 	func testDataManager_1_1() {
 		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
 
-		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
-		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
-		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
+		var tokenLocation = dm.insertTokenForPlayer(.PLAYER_1, intoColumn: 0)
+		XCTAssertTrue(tokenLocation == (0,0))
+		tokenLocation = dm.insertTokenForPlayer(.PLAYER_1, intoColumn: 0)
+		XCTAssertTrue(tokenLocation == (1,0))
+		tokenLocation = dm.insertTokenForPlayer(.PLAYER_1, intoColumn: 0)
+		XCTAssertTrue(tokenLocation == (2,0))
 
 
 		let targetData1 = [
@@ -35,9 +38,12 @@ class _98Point6_DataManager_Tests: XCTestCase {
 	func testDataManager_1_2() {
 		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
 
-		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
-		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_2, intoColumn: 0))
-		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
+		var tokenLocation = dm.insertTokenForPlayer(.PLAYER_1, intoColumn: 0)
+		XCTAssertTrue(tokenLocation == (0,0))
+		tokenLocation = dm.insertTokenForPlayer(.PLAYER_2, intoColumn: 0)
+		XCTAssertTrue(tokenLocation == (1,0))
+		tokenLocation = dm.insertTokenForPlayer(.PLAYER_1, intoColumn: 0)
+		XCTAssertTrue(tokenLocation == (2,0))
 
 
 		let targetData1 = [
@@ -55,15 +61,23 @@ class _98Point6_DataManager_Tests: XCTestCase {
 	func testDataManager_1_3() {
 		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
 
-		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
-		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_2, intoColumn: 0))
-		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
-		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_2, intoColumn: 0))
 
-		XCTAssertFalse(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0),
+		var tokenLocation = dm.insertTokenForPlayer(.PLAYER_1, intoColumn: 0)
+		XCTAssertTrue(tokenLocation == (0,0))
+		tokenLocation = dm.insertTokenForPlayer(.PLAYER_2, intoColumn: 0)
+		XCTAssertTrue(tokenLocation == (1,0))
+		tokenLocation = dm.insertTokenForPlayer(.PLAYER_1, intoColumn: 0)
+		XCTAssertTrue(tokenLocation == (2,0))
+		tokenLocation = dm.insertTokenForPlayer(.PLAYER_2, intoColumn: 0)
+		XCTAssertTrue(tokenLocation == (3,0))
+
+
+		tokenLocation = dm.insertTokenForPlayer(.PLAYER_1, intoColumn: 0)
+		XCTAssertTrue(tokenLocation == (-1,-1),
 					   "Added piece when we should not have been able too")
-		XCTAssertFalse(dm.testInsertTokenForPlayer(.PLAYER_2, intoColumn: 0),
-					   "Added piece when we should not have been able too")
+		tokenLocation = dm.insertTokenForPlayer(.PLAYER_2, intoColumn: 0)
+		XCTAssertTrue(tokenLocation == (-1,-1),
+					  "Added piece when we should not have been able too")
 
 		let targetData1 = [
 			[GamePiece.PLAYER_1, 	GamePiece.EMPTY, 	GamePiece.EMPTY, 	GamePiece.EMPTY],
@@ -83,9 +97,13 @@ class _98Point6_DataManager_Tests: XCTestCase {
 	func testDataManager_2() {
 		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
 
-		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
-		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_2, intoColumn: 0))
-		XCTAssertTrue(dm.testInsertTokenForPlayer(.PLAYER_1, intoColumn: 0))
+
+		var tokenLocation = dm.insertTokenForPlayer(.PLAYER_1, intoColumn: 0)
+		XCTAssertTrue(tokenLocation == (0,0))
+		tokenLocation = dm.insertTokenForPlayer(.PLAYER_2, intoColumn: 0)
+		XCTAssertTrue(tokenLocation == (1,0))
+		tokenLocation = dm.insertTokenForPlayer(.PLAYER_1, intoColumn: 0)
+		XCTAssertTrue(tokenLocation == (2,0))
 
 		let targetData1 = [GamePiece.PLAYER_1, 	GamePiece.PLAYER_2, GamePiece.PLAYER_1, GamePiece.EMPTY]
 		let data = dm.testGetDataForColumn(0)
@@ -121,7 +139,7 @@ class _98Point6_DataManager_Tests: XCTestCase {
 
 
 	/**
-	Insert from Network Data
+	Test Getting Data for Network
 	*/
 	func testDataManager_4() {
 		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
@@ -142,7 +160,7 @@ class _98Point6_DataManager_Tests: XCTestCase {
 
 
 	/**
-	Insert from Network Data
+	Test Getting Data for Network
 	*/
 	func testDataManager_5() {
 		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
@@ -165,7 +183,7 @@ class _98Point6_DataManager_Tests: XCTestCase {
 
 
 	/**
-	Insert from Network Data
+	Test Getting Data for Network
 	*/
 	func testDataManager_6() {
 		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
@@ -181,6 +199,254 @@ class _98Point6_DataManager_Tests: XCTestCase {
 		print(outGoingData)
 
 		XCTAssertTrue(outGoingData == mockNetworkData, "\(outGoingData) != \(mockNetworkData)")
+	}
+
+
+
+	/**
+	Test Game Win Down
+	*/
+	func testDataManager_7() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let targetData1 = [
+			[GamePiece.PLAYER_1, 	GamePiece.PLAYER_2, 	GamePiece.PLAYER_1, 	GamePiece.EMPTY],
+			[GamePiece.PLAYER_1, 	GamePiece.PLAYER_2, 	GamePiece.PLAYER_2, 	GamePiece.EMPTY],
+			[GamePiece.PLAYER_1, 	GamePiece.PLAYER_2, 	GamePiece.PLAYER_2, 	GamePiece.EMPTY],
+			[GamePiece.PLAYER_1, 	GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
+		]
+
+		let mockNetworkData = [0, 1, 2, 1, 0, 2, 0, 1, 0, 2]
+
+		dm.updateGameUIDataWithNetworkData(mockNetworkData)
+
+		let data = dm.gameUIData
+		print(data)
+		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
+
+		let win = dm.isWinningMoveFrom(row: 3, column: 0, gamePiece: .PLAYER_1)
+
+		XCTAssertTrue(win, "No Win something is wrong")
+
+	}
+
+
+
+	/**
+	Test Game Win Diagonal Down, column increasing
+	*/
+	func testDataManager_8() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let targetData1 = [
+			[GamePiece.PLAYER_1, 	GamePiece.PLAYER_2, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_1],
+			[GamePiece.PLAYER_2, 	GamePiece.PLAYER_2, 	GamePiece.PLAYER_1, 	GamePiece.EMPTY],
+			[GamePiece.PLAYER_2, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_2, 	GamePiece.EMPTY],
+			[GamePiece.PLAYER_1, 	GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
+		]
+
+		let mockNetworkData = [0, 1, 2, 0, 3, 1, 2, 0, 1, 2, 0]
+
+		dm.updateGameUIDataWithNetworkData(mockNetworkData)
+
+		let data = dm.gameUIData
+		print(data)
+		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
+
+		let win = dm.isWinningMoveFrom(row: 3, column: 0, gamePiece: .PLAYER_1)
+
+		XCTAssertTrue(win, "No Win something is wrong")
+
+	}
+
+
+
+	/**
+	Test Game column increasing
+	*/
+	func testDataManager_9() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let targetData1 = [
+			[GamePiece.PLAYER_1, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_1],
+			[GamePiece.PLAYER_2, 	GamePiece.PLAYER_2, 	GamePiece.EMPTY, 		GamePiece.EMPTY],
+			[GamePiece.PLAYER_2, 	GamePiece.PLAYER_2, 	GamePiece.EMPTY, 		GamePiece.EMPTY],
+			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
+		]
+
+		let mockNetworkData = [0, 0, 1, 1, 2, 0, 3, 1]
+
+		dm.updateGameUIDataWithNetworkData(mockNetworkData)
+
+		let data = dm.gameUIData
+		print(data)
+		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
+
+		let win = dm.isWinningMoveFrom(row: 0, column: 0, gamePiece: .PLAYER_1)
+
+		XCTAssertTrue(win, "No Win something is wrong")
+
+	}
+
+
+	/**
+	Test Game column increasing
+	*/
+	func testDataManager_10() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let targetData1 = [
+			[GamePiece.PLAYER_1, 	GamePiece.PLAYER_2, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_1],
+			[GamePiece.EMPTY	, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_2, 	GamePiece.PLAYER_2],
+			[GamePiece.EMPTY, 		GamePiece.PLAYER_2, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_2],
+			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.PLAYER_1]
+		]
+
+		let mockNetworkData = [3, 3, 2, 3, 3, 2, 2, 1, 1, 1, 0]
+
+		dm.updateGameUIDataWithNetworkData(mockNetworkData)
+
+		let data = dm.gameUIData
+		print(data)
+		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
+
+		let win = dm.isWinningMoveFrom(row: 3, column: 3, gamePiece: .PLAYER_1)
+
+		XCTAssertTrue(win, "No Win something is wrong")
+
+	}
+
+
+	/**
+	Test Game column increasing
+	*/
+	func testDataManager_11() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let targetData1 = [
+			[GamePiece.PLAYER_1, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_1],
+			[GamePiece.EMPTY	, 	GamePiece.EMPTY, 		GamePiece.PLAYER_2, 	GamePiece.PLAYER_2],
+			[GamePiece.EMPTY, 		GamePiece.EMPTY,	 	GamePiece.PLAYER_2, 	GamePiece.PLAYER_2],
+			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
+		]
+
+		let mockNetworkData = [3, 3, 2, 2, 1, 3, 0, 2]
+
+		dm.updateGameUIDataWithNetworkData(mockNetworkData)
+
+		let data = dm.gameUIData
+		print(data)
+		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
+
+		let win = dm.isWinningMoveFrom(row: 0, column: 3, gamePiece: .PLAYER_1)
+
+		XCTAssertTrue(win, "No Win something is wrong")
+
+	}
+
+
+	/**
+	Test for draw game
+	*/
+	func testDataManager_12() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let targetData1 = [
+			[GamePiece.PLAYER_1, 	GamePiece.PLAYER_2, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_2],
+			[GamePiece.PLAYER_2	, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_2],
+			[GamePiece.PLAYER_2, 	GamePiece.PLAYER_1,	 	GamePiece.PLAYER_2, 	GamePiece.PLAYER_1],
+			[GamePiece.PLAYER_1, 	GamePiece.PLAYER_2, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_2]
+		]
+
+		let mockNetworkData = [0, 1, 2, 3,
+							   1, 0, 2, 3,
+							   1, 0, 3, 2,
+							   0, 1, 2, 3]
+
+		dm.updateGameUIDataWithNetworkData(mockNetworkData)
+
+		let data = dm.gameUIData
+		print(data)
+		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
+
+		var player2ShouldBeFalse = dm.isWinningMoveFrom(row: 3, column: 3, gamePiece: .PLAYER_2)
+
+		XCTAssertFalse(player2ShouldBeFalse, "No Win should be possible.")
+
+		var player1ShouldBeFalse = dm.isWinningMoveFrom(row: 3, column: 0, gamePiece: .PLAYER_1)
+
+		XCTAssertFalse(player1ShouldBeFalse, "No Win should be possible.")
+
+		player2ShouldBeFalse = dm.isWinningMoveFrom(row: 3, column: 1, gamePiece: .PLAYER_2)
+
+		XCTAssertFalse(player2ShouldBeFalse, "No Win should be possible.")
+
+		player1ShouldBeFalse = dm.isWinningMoveFrom(row: 3, column: 2, gamePiece: .PLAYER_1)
+
+		XCTAssertFalse(player1ShouldBeFalse, "No Win should be possible.")
+
+
+	}
+
+
+
+	/**
+	Any moves Left?
+	*/
+	func testDataManager_13() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let mockNetworkData = [
+			0, 1, 2, 3,
+			0, 1, 2, 3,
+			0, 1, 2, 3,
+			0, 1, 2, 3
+		]
+
+		dm.updateGameUIDataWithNetworkData(mockNetworkData)
+
+		let movesLeft = dm.areAnyPossibleMovesLeft
+
+		XCTAssertFalse(movesLeft, "there should NOT be any moves left.")
+
+	}
+
+	/**
+	Any moves Left?
+	*/
+	func testDataManager_14() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let mockNetworkData = [
+			0, 1, 2, 3,
+			0, 1, 2, 3,
+			0, 1, 2, 3,
+			0, 1, 2
+		]
+
+		dm.updateGameUIDataWithNetworkData(mockNetworkData)
+
+		let movesLeft = dm.areAnyPossibleMovesLeft
+
+		XCTAssertTrue(movesLeft, "there are 1 moves left.")
+
+	}
+
+
+	/**
+	Any moves Left?
+	*/
+	func testDataManager_15() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let mockNetworkData = [Int]()
+
+		dm.updateGameUIDataWithNetworkData(mockNetworkData)
+
+		let movesLeft = dm.areAnyPossibleMovesLeft
+
+		XCTAssertTrue(movesLeft, "there are many moves left.")
+
 	}
 
 

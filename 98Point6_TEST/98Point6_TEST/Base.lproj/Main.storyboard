@@ -25,37 +25,24 @@
                                 </accessibility>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="ORU-4g-ehf" secondAttribute="height" multiplier="1:1" id="Rif-QT-FSc"/>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="300" id="jZb-rm-79N"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="jsb-fW-ljW"/>
+                                    <constraint firstAttribute="height" constant="300" id="uIq-ag-Kbv"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XwP-3v-C1y">
-                                <rect key="frame" x="57" y="260" width="300" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="q7c-wI-h2g"/>
-                                </constraints>
-                                <state key="normal" title="INFO"/>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="ORU-4g-ehf" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="XwP-3v-C1y" secondAttribute="leading" id="J5y-Hh-HCM"/>
+                            <constraint firstItem="ORU-4g-ehf" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="0fd-hF-8FS"/>
                             <constraint firstItem="ORU-4g-ehf" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="OKm-BO-geI"/>
-                            <constraint firstItem="ORU-4g-ehf" firstAttribute="centerX" secondItem="XwP-3v-C1y" secondAttribute="centerX" id="P96-nG-I8O"/>
-                            <constraint firstItem="ORU-4g-ehf" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="XwP-3v-C1y" secondAttribute="trailing" id="Y8C-Za-FqK"/>
                             <constraint firstItem="ORU-4g-ehf" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="YIy-mS-RI8"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="ORU-4g-ehf" secondAttribute="bottom" constant="8" id="akB-DZ-YdT"/>
-                            <constraint firstItem="ORU-4g-ehf" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="d1P-bK-Yhx"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="ORU-4g-ehf" secondAttribute="trailing" constant="8" id="c2c-C7-paq"/>
                             <constraint firstItem="ORU-4g-ehf" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="fF5-Rm-0m8"/>
                             <constraint firstItem="ORU-4g-ehf" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="mNg-uq-kOW"/>
-                            <constraint firstItem="XwP-3v-C1y" firstAttribute="top" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="8" id="pSS-H2-t9i"/>
-                            <constraint firstItem="ORU-4g-ehf" firstAttribute="top" secondItem="XwP-3v-C1y" secondAttribute="bottom" constant="8" symbolic="YES" id="qok-Sa-fPg"/>
+                            <constraint firstItem="ORU-4g-ehf" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="rQj-r5-pWZ"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="gameField" destination="ORU-4g-ehf" id="3iE-ah-XM8"/>
-                        <outlet property="infoButton" destination="XwP-3v-C1y" id="thd-Ld-5Xp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

@@ -97,11 +97,9 @@ class _98Point6_Networking_Tests: XCTestCase {
 
 }
 
-
-extension _98Point6_Networking_Tests: NetworkingDelagate {
-	func reportTheReturnedMoves(_ moves: [Int]) {
-		print("SUCCESS")
-	}
-
-
-}
+//
+//extension _98Point6_Networking_Tests: NetworkingDelagate {
+//	func reportTheReturnedMoves(_ moves: [Int]) {
+//		print("SUCCESS")
+//	}
+//}

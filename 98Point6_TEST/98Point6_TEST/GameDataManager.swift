@@ -14,11 +14,27 @@ class GameDataManager {
 
 	// MARK: - Properties
 
-	private var maxArraySize: Int
-	public var networkData: [Int]
-
 	private var numberOfColumns: Int
 	private var numberOfRows: Int
+
+	private var maxArraySize: Int {
+		get {
+			numberOfColumns * numberOfRows
+		}
+	}
+	public var networkData: [Int] {
+		get {
+			return getDataForNetwork()
+		}
+	}
+
+	public var areAnyPossibleMovesLeft: Bool {
+		get {
+			return networkData.count != maxArraySize 
+		}
+	}
+
+
 	public var gameUIData: [[GamePiece]]
 
 
@@ -28,10 +44,6 @@ class GameDataManager {
 
 		self.numberOfColumns = numberOfColumns
 		self.numberOfRows = numberOfRows
-
-		self.maxArraySize = numberOfColumns * numberOfRows
-
-		self.networkData = [Int]()
 
 		self.gameUIData = Array(repeating: Array(repeating: GamePiece.EMPTY, count: numberOfColumns), count: numberOfRows)
 
@@ -58,13 +70,14 @@ class GameDataManager {
 
 	/**
 	Updates the GameUI data.
+	- Parameter networkData: [Int]
 	*/
 	func updateGameUIDataWithNetworkData(_ networkData: [Int]) {
 		for index in 0..<networkData.count {
 			let columnValue = networkData[index]
-			if index % 2 == 0 { // Player 1, remember index offset by 1.
+			if index % 2 == 0 { 											// Player 1, remember index offset by 1.
 				insertTokenForPlayer(.PLAYER_1, intoColumn: columnValue)
-			} else { // Player 2
+			} else { 														// Player 2
 				insertTokenForPlayer(.PLAYER_2, intoColumn: columnValue)
 			}
 		}
@@ -79,16 +92,25 @@ class GameDataManager {
 	- Returns: Bool, if successful (if not room in column returns false.
 	*/
 	@discardableResult
-	private func insertTokenForPlayer(_ player: GamePiece, intoColumn columnIndex: Int) -> Bool {
+	func insertTokenForPlayer(_ player: GamePiece, intoColumn columnIndex: Int) -> (row: Int, column: Int) {
 		let columnData = getDataForColumn(columnIndex)
 		if let rowIndex = columnData.firstIndex(of: .EMPTY) {
 			gameUIData[rowIndex][columnIndex] = player
-			return true
+			return (row: rowIndex, column: columnIndex)
 		}
-		return false
+		return (row: -1, column: -1)
 	}
 
 
+	func isAnyPossibleMovesLeft() -> Bool {
+		return maxArraySize == networkData.count
+	}
+
+
+	/**
+	Process the internal game represenation for something we can send to the server.
+	- Returns: [Int]
+	*/
 	func getDataForNetwork() -> [Int] {
 
 		let player1Queue = Queue<Int>()
@@ -127,6 +149,122 @@ class GameDataManager {
 	}
 
 
+	// MARK: Game Logic Win/Lose Checking
+
+	/**
+	Fun with recursion. to check if there is a win.
+
+	- Parameter gamePiece: GamePiece, being checked.
+	- Parameter row: Int,
+	- Parameter column: Int,
+	- Parameter x: Int, (x direction to search)
+	- Parameter y: Int (y direction to search)
+	- Returns: Int, the number of Matches
+	*/
+	private func getNumberOfMatchesOf(gamePiece: GamePiece,
+									  startingAtRow row: Int,
+									  andColumn column: Int,
+									  inDirectionColX x: Int,
+									  andRowY y: Int) -> Int {
+
+		guard
+			!(x == 0 && y == 0),
+			0 <= column && column < numberOfColumns,
+			0 <= row && row < numberOfRows
+		else {
+			return 0
+		}
+
+		if
+			gameUIData[row][column] == gamePiece {
+			return 1 + getNumberOfMatchesOf(gamePiece: gamePiece,
+											startingAtRow: row+y,
+											andColumn: column+x,
+											inDirectionColX: x,
+											andRowY: y)
+		}
+
+		return 0
+
+	}
+
+
+	/**
+	Checks if there is a win, with recurssion helper.
+
+	- Parameter row: Int, (row of where piece places.
+	- Parameter column:Int,  (column of where piece places.
+	- Parameter gamePiece: GamePiece,
+	- Parameter targetMatches: Int  (Default = ViewController.numberOfMatches, currently = 4)
+	- Returns: Bool
+	*/
+	public func isWinningMoveFrom(row: Int,
+								  column:Int,
+								  gamePiece: GamePiece,
+								  targetMatches: Int = ViewController.numberOfMatches) -> Bool {
+
+		// Down
+		let downMatches = getNumberOfMatchesOf(gamePiece: .PLAYER_1,
+											   startingAtRow: row,
+											   andColumn: column,
+											   inDirectionColX: 0,
+											   andRowY: -1)
+		if downMatches == targetMatches {
+			return true
+		}
+
+
+		// Down, Column increasing
+		let downColumnIncresingMatches = getNumberOfMatchesOf(gamePiece: .PLAYER_1,
+															  startingAtRow: row,
+															  andColumn: column,
+															  inDirectionColX: 1,
+															  andRowY: -1)
+
+		if downColumnIncresingMatches == targetMatches {
+			return true
+		}
+
+
+		// Column increasing
+		let columnIncresingMatches = getNumberOfMatchesOf(gamePiece: .PLAYER_1,
+														  startingAtRow: row,
+														  andColumn: column,
+														  inDirectionColX: 1,
+														  andRowY: 0)
+		if columnIncresingMatches == targetMatches {
+			return true
+		}
+
+
+		// Down, Column decreasing
+		let downColumnDecresingMatches = getNumberOfMatchesOf(gamePiece: .PLAYER_1,
+															  startingAtRow: row,
+															  andColumn: column,
+															  inDirectionColX: -1,
+															  andRowY: -1)
+
+		if downColumnDecresingMatches == targetMatches {
+			return true
+		}
+
+
+		// Column decreasing
+		let columnDecresingMatches = getNumberOfMatchesOf(gamePiece: .PLAYER_1,
+														  startingAtRow: row,
+														  andColumn: column,
+														  inDirectionColX: -1,
+														  andRowY: 0)
+
+		if columnDecresingMatches == targetMatches {
+			return true
+		}
+
+		return false
+
+	}
+
+
 }
 
 
@@ -154,133 +292,6 @@ extension GameDataManager: CustomStringConvertible {
 	}
 
 
-	/**
-	Looks like the ugliest recurrsion to me.
-	*/
-	private func getNumberOfMatchesOf(gamePiece: GamePiece,
-									  startingAtRow row: Int,
-									  andColumn column: Int,
-									  inDirectionColX x: Int,
-									  andRowY y: Int) -> Int {
-
-		guard
-			x != y,
-			0 <= x,
-			0 <= y,
-			y < numberOfRows,
-			x < numberOfColumns else {
-			print("You are going no where!")
-			return 0
-		}
-
-		if
-			gameUIData[row][column] == gamePiece {
-			return 1 + getNumberOfMatchesOf(gamePiece: gamePiece,
-											startingAtRow: row+y,
-											andColumn: column+x,
-											inDirectionColX: x,
-											andRowY: y)
-		}
-
-		return 0
-
-
-	}
-
-
-	func isWinningMoveFrom(row: Int, column:Int, gamePiece: GamePiece) -> Bool {
-
-		// Left
-		var examinedRow = row
-		var examinedColumn = column
-		var count = 0
-		while (0 <= examinedRow && examinedRow < numberOfRows) &&
-				(0 <= examinedColumn && examinedColumn < numberOfColumns) {
-
-			if gameUIData[examinedRow][examinedColumn] == gamePiece {
-				count += 1
-			}
-
-			examinedColumn -= 1
-		}
-		if count == 4 {
-			return true
-		}
-
-		// Diagonal Left
-		examinedRow = row
-		examinedColumn = column
-		count = 0
-		while (0 <= examinedRow && examinedRow < numberOfRows) &&
-				(0 <= examinedColumn && examinedColumn < numberOfColumns) {
-
-			if gameUIData[examinedRow][examinedColumn] == gamePiece {
-				count += 1
-			}
-
-			examinedRow -= 1
-			examinedColumn -= 1
-		}
-		if count == 4 {
-			return true
-		}
-
-		// Down
-		examinedRow = row
-		examinedColumn = column
-		count = 0
-		while (0 <= examinedRow && examinedRow < numberOfRows) &&
-				(0 <= examinedColumn && examinedColumn < numberOfColumns) {
-
-			let examinedCell = gameUIData[examinedRow][examinedColumn]
-			if examinedCell == gamePiece {
-				count += 1
-			}
-
-			examinedRow -= 1
-		}
-		if count == 4 {
-			return true
-		}
-
-		// Diagonal Right
-		examinedRow = row
-		examinedColumn = column
-		count = 0
-		while (0 <= examinedRow && examinedRow < numberOfRows) &&
-				(0 <= examinedColumn && examinedColumn < numberOfColumns) {
-
-			if gameUIData[examinedRow][examinedColumn] == gamePiece {
-				count += 1
-			}
-
-			examinedRow += 1
-			examinedColumn += 1
-		}
-		if count == 4 {
-			return true
-		}
-
-		// Right
-		examinedRow = row
-		examinedColumn = column
-		count = 0
-		while (0 <= examinedRow && examinedRow < numberOfRows) &&
-				(0 <= examinedColumn && examinedColumn < numberOfColumns) {
-
-			if gameUIData[examinedRow][examinedColumn] == gamePiece {
-				count += 1
-			}
-
-			examinedColumn += 1
-		}
-		if count == 4 {
-			return true
-		}
-
-		return false
-
-	}
 
 }
 
@@ -293,10 +304,6 @@ extension GameDataManager {
 		return getDataForColumn(columnIndex)
 	}
 
-
-	public func testInsertTokenForPlayer(_ player: GamePiece, intoColumn column: Int) -> Bool {
-		return insertTokenForPlayer(player, intoColumn: column)
-	}
 
 	#endif
 
