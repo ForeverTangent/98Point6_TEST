@@ -638,6 +638,417 @@ class _98Point6_DataManager_Tests: XCTestCase {
 
 
 
+
+
+
+
+	/**
+	Test Game Win Down
+	*/
+	func testGameDataManager_WinningGameDown_1_0() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let targetData1 = [
+			[GamePiece.PLAYER_1, 	GamePiece.P2_SERVER, 	GamePiece.EMPTY, 	GamePiece.EMPTY],
+			[GamePiece.PLAYER_1, 	GamePiece.P2_SERVER, 	GamePiece.EMPTY, 	GamePiece.EMPTY],
+			[GamePiece.PLAYER_1, 	GamePiece.P2_SERVER, 	GamePiece.EMPTY, 	GamePiece.EMPTY],
+			[GamePiece.PLAYER_1, 	GamePiece.P2_SERVER, 	GamePiece.EMPTY, 	GamePiece.EMPTY]
+		]
+
+		dm.testInjectGameUIData(targetData1)
+
+		let data = dm.testGetGameUIData()
+		print(dm)
+		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
+
+		let winTest1 = dm.isWinningMoveFrom(row: 3, column: 0, gamePiece: .PLAYER_1)
+		XCTAssertTrue(winTest1, "There SHould be a win, something is wrong")
+
+		let winTest2 = dm.isWinningMoveFrom(row: 3, column: 1, gamePiece: .P2_SERVER)
+		XCTAssertTrue(winTest2, "There SHould be a win, something is wrong")
+
+	}
+
+
+
+	/**
+	Test Game no Win left to right
+	*/
+	func testGameDataManager_NoWinningGameLeftRight_1_0() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let targetData1 = [
+			[GamePiece.PLAYER_1, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_1, 	GamePiece.EMPTY],
+			[GamePiece.P2_SERVER, 	GamePiece.P2_SERVER, 	GamePiece.P2_SERVER, 	GamePiece.EMPTY],
+			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY],
+			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
+		]
+
+		dm.testInjectGameUIData(targetData1)
+
+		let data = dm.testGetGameUIData()
+		print(dm)
+		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
+
+		var winLost = true
+
+		winLost = dm.isWinningMoveFrom(row: 0, column: 0, gamePiece: .PLAYER_1)
+		XCTAssertFalse(winLost, "There should be No Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 0, column: 1, gamePiece: .PLAYER_1)
+		XCTAssertFalse(winLost, "There should be No Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 0, column: 2, gamePiece: .PLAYER_1)
+		XCTAssertFalse(winLost, "There should be No Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 1, column: 0, gamePiece: .P2_SERVER)
+		XCTAssertFalse(winLost, "There should be No Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 1, column: 1, gamePiece: .P2_SERVER)
+		XCTAssertFalse(winLost, "There should be No Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 1, column: 2, gamePiece: .P2_SERVER)
+		XCTAssertFalse(winLost, "There should be No Win, something is wrong")
+
+	}
+
+
+	/**
+	Test Game  Win left to right
+	*/
+	func testGameDataManager_WinningGameLeftRight_1_0() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let targetData1 = [
+			[GamePiece.PLAYER_1, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_1],
+			[GamePiece.P2_SERVER, 	GamePiece.P2_SERVER, 	GamePiece.P2_SERVER, 	GamePiece.P2_SERVER],
+			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY],
+			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
+		]
+
+		dm.testInjectGameUIData(targetData1)
+
+		let data = dm.testGetGameUIData()
+		print(dm)
+		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
+
+		var winLost = false
+
+		winLost = dm.isWinningMoveFrom(row: 0, column: 0, gamePiece: .PLAYER_1)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 0, column: 1, gamePiece: .PLAYER_1)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 0, column: 2, gamePiece: .PLAYER_1)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 0, column: 3, gamePiece: .PLAYER_1)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 1, column: 0, gamePiece: .P2_SERVER)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 1, column: 1, gamePiece: .P2_SERVER)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 1, column: 2, gamePiece: .P2_SERVER)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 1, column: 3, gamePiece: .P2_SERVER)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+	}
+
+
+
+
+	/**
+	Test Game no win Diagonal 1 player 1
+	*/
+	func testDataManager_WinDiagonal1_1_0() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let targetData1 = [
+			[GamePiece.PLAYER_1, 	GamePiece.P2_SERVER, 	GamePiece.P2_SERVER, 	GamePiece.P2_SERVER],
+			[GamePiece.PLAYER_1, 	GamePiece.PLAYER_1, 	GamePiece.P2_SERVER, 	GamePiece.P2_SERVER],
+			[GamePiece.PLAYER_1, 	GamePiece.EMPTY, 		GamePiece.PLAYER_1, 	GamePiece.P2_SERVER],
+			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.PLAYER_1]
+		]
+
+		dm.testInjectGameUIData(targetData1)
+
+		let data = dm.testGetGameUIData()
+		print(dm)
+		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
+
+		var winLost = false
+
+		winLost = dm.isWinningMoveFrom(row: 0, column: 0, gamePiece: .PLAYER_1)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 1, column: 1, gamePiece: .PLAYER_1)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 2, column: 2, gamePiece: .PLAYER_1)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 3, column: 3, gamePiece: .PLAYER_1)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+
+	}
+
+
+	/**
+	Test Game no win Diagonal 1 player 2
+	*/
+	func testDataManager_WinDiagonal1_2_0_0() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let targetData1 = [
+			[GamePiece.P2_SERVER, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_1],
+			[GamePiece.P2_SERVER, 	GamePiece.P2_SERVER, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_1],
+			[GamePiece.P2_SERVER, 	GamePiece.EMPTY, 		GamePiece.P2_SERVER, 	GamePiece.PLAYER_1],
+			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.P2_SERVER]
+		]
+
+		dm.testInjectGameUIData(targetData1)
+
+		let data = dm.testGetGameUIData()
+		print(dm)
+		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
+
+		var winLost = false
+
+		winLost = dm.isWinningMoveFrom(row: 0, column: 0, gamePiece: .P2_SERVER)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 1, column: 1, gamePiece: .P2_SERVER)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 2, column: 2, gamePiece: .P2_SERVER)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 3, column: 3, gamePiece: .P2_SERVER)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+	}
+
+
+
+
+	/**
+	Test Game no win Diagonal 1 player 1
+	*/
+	func testDataManager_NoWinDiagonal1_1_0() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let targetData1 = [
+			[GamePiece.PLAYER_1, 	GamePiece.P2_SERVER, 	GamePiece.P2_SERVER, 	GamePiece.EMPTY],
+			[GamePiece.EMPTY, 		GamePiece.PLAYER_1, 	GamePiece.P2_SERVER, 	GamePiece.EMPTY],
+			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.PLAYER_1, 	GamePiece.EMPTY],
+			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
+		]
+
+		dm.testInjectGameUIData(targetData1)
+
+		let data = dm.testGetGameUIData()
+		print(dm)
+		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
+
+		var winLost = false
+
+		winLost = dm.isWinningMoveFrom(row: 0, column: 0, gamePiece: .PLAYER_1)
+		XCTAssertFalse(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 1, column: 1, gamePiece: .PLAYER_1)
+		XCTAssertFalse(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 2, column: 2, gamePiece: .PLAYER_1)
+		XCTAssertFalse(winLost, "There should be a Win, something is wrong")
+
+
+	}
+
+
+	/**
+	Test Game no win Diagonal 1 player 2
+	*/
+	func testDataManager_NoWinDiagonal1_2_0() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let targetData1 = [
+			[GamePiece.P2_SERVER, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_1, 	GamePiece.EMPTY],
+			[GamePiece.EMPTY, 		GamePiece.P2_SERVER, 	GamePiece.PLAYER_1, 	GamePiece.EMPTY],
+			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.P2_SERVER, 	GamePiece.EMPTY],
+			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
+		]
+
+		dm.testInjectGameUIData(targetData1)
+
+		let data = dm.testGetGameUIData()
+		print(dm)
+		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
+
+		var winLost = false
+
+		winLost = dm.isWinningMoveFrom(row: 0, column: 0, gamePiece: .P2_SERVER)
+		XCTAssertFalse(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 1, column: 1, gamePiece: .P2_SERVER)
+		XCTAssertFalse(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 2, column: 2, gamePiece: .P2_SERVER)
+		XCTAssertFalse(winLost, "There should be a Win, something is wrong")
+
+
+	}
+
+
+
+	/**
+	Test Game no win Diagonal 1 player 1
+	*/
+	func testDataManager_WinDiagonal2_1_0() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let targetData1 = [
+			[GamePiece.P2_SERVER, 	GamePiece.P2_SERVER, 	GamePiece.P2_SERVER, 	GamePiece.PLAYER_1],
+			[GamePiece.P2_SERVER, 	GamePiece.P2_SERVER, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_1],
+			[GamePiece.P2_SERVER, 	GamePiece.PLAYER_1, 	GamePiece.EMPTY, 		GamePiece.PLAYER_1],
+			[GamePiece.PLAYER_1, 	GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
+		]
+
+		dm.testInjectGameUIData(targetData1)
+
+		let data = dm.testGetGameUIData()
+		print(dm)
+		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
+
+		var winLost = false
+
+		winLost = dm.isWinningMoveFrom(row: 0, column: 3, gamePiece: .PLAYER_1)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 1, column: 2, gamePiece: .PLAYER_1)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 2, column: 1, gamePiece: .PLAYER_1)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 3, column: 0, gamePiece: .PLAYER_1)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+	}
+
+
+	/**
+	Test Game no win Diagonal 1 player 1
+	*/
+	func testDataManager_WinDiagonal2_2_0() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let targetData1 = [
+			[GamePiece.PLAYER_1, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_1, 	GamePiece.P2_SERVER],
+			[GamePiece.PLAYER_1, 	GamePiece.PLAYER_1, 	GamePiece.P2_SERVER, 	GamePiece.P2_SERVER],
+			[GamePiece.PLAYER_1, 	GamePiece.P2_SERVER, 	GamePiece.EMPTY, 		GamePiece.P2_SERVER],
+			[GamePiece.P2_SERVER, 	GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
+		]
+
+		dm.testInjectGameUIData(targetData1)
+
+		let data = dm.testGetGameUIData()
+		print(dm)
+		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
+
+		var winLost = false
+
+		winLost = dm.isWinningMoveFrom(row: 0, column: 3, gamePiece: .P2_SERVER)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 1, column: 2, gamePiece: .P2_SERVER)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 2, column: 1, gamePiece: .P2_SERVER)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 3, column: 0, gamePiece: .P2_SERVER)
+		XCTAssertTrue(winLost, "There should be a Win, something is wrong")
+
+	}
+
+
+
+	/**
+	Test Game no win Diagonal 1 player 1
+	*/
+	func testDataManager_NoWinDiagonal2_1_0() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let targetData1 = [
+			[GamePiece.EMPTY, 	GamePiece.P2_SERVER, 	GamePiece.P2_SERVER, 	GamePiece.PLAYER_1],
+			[GamePiece.EMPTY, 	GamePiece.P2_SERVER, 	GamePiece.PLAYER_1, 	GamePiece.EMPTY],
+			[GamePiece.EMPTY, 	GamePiece.PLAYER_1, 	GamePiece.EMPTY, 		GamePiece.EMPTY],
+			[GamePiece.EMPTY, 	GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
+		]
+
+		dm.testInjectGameUIData(targetData1)
+
+		let data = dm.testGetGameUIData()
+		print(dm)
+		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
+
+		var winLost = false
+
+		winLost = dm.isWinningMoveFrom(row: 0, column: 3, gamePiece: .PLAYER_1)
+		XCTAssertFalse(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 1, column: 2, gamePiece: .PLAYER_1)
+		XCTAssertFalse(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 2, column: 1, gamePiece: .PLAYER_1)
+		XCTAssertFalse(winLost, "There should be a Win, something is wrong")
+
+
+	}
+
+
+	/**
+	Test Game no win Diagonal 1 player 1
+	*/
+	func testDataManager_NoWinDiagonal2_2_0() {
+		let dm = GameDataManager(numberOfColumns: 4, numberOfRows: 4)
+
+		let targetData1 = [
+			[GamePiece.EMPTY, 	GamePiece.PLAYER_1, 	GamePiece.PLAYER_1, 	GamePiece.P2_SERVER],
+			[GamePiece.EMPTY, 	GamePiece.PLAYER_1, 	GamePiece.P2_SERVER, 	GamePiece.EMPTY],
+			[GamePiece.EMPTY, 	GamePiece.P2_SERVER, 	GamePiece.EMPTY, 		GamePiece.EMPTY],
+			[GamePiece.EMPTY, 	GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
+		]
+
+		dm.testInjectGameUIData(targetData1)
+
+		let data = dm.testGetGameUIData()
+		print(dm)
+		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
+
+		var winLost = false
+
+		winLost = dm.isWinningMoveFrom(row: 0, column: 3, gamePiece: .P2_SERVER)
+		XCTAssertFalse(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 1, column: 2, gamePiece: .P2_SERVER)
+		XCTAssertFalse(winLost, "There should be a Win, something is wrong")
+
+		winLost = dm.isWinningMoveFrom(row: 2, column: 1, gamePiece: .P2_SERVER)
+		XCTAssertFalse(winLost, "There should be a Win, something is wrong")
+
+
+	}
+
+
+
 	/**
 	Test for draw game
 	*/
