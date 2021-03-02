@@ -9,8 +9,15 @@ import UIKit
 import os
 
 
+enum GameResult: Int {
+	case WIN
+	case LOSE
+	case DRAW
+}
+
+
 /**
-[This is smart](https://stackoverflow.com/a/53601585/9760718)
+[This is smart, I gotta remember this.](https://stackoverflow.com/a/53601585/9760718)
 
 No more Selectors
 */
@@ -32,22 +39,27 @@ class BindableGestureRecognizer: UITapGestureRecognizer {
 class ViewController: UIViewController {
 
 	// MARK: - Properties
+
 	private let logger = ViewController.getLoggerFor(category: "ViewController")
 	static func getLoggerFor(category: String) -> Logger {
 		return Logger(subsystem: Bundle.main.bundleIdentifier!, category: category)
 	}
-
-
-	@IBOutlet weak var gameField: UIView!
-
-
-	// MARK: UI Properties
 
 	private var gameFieldStackView = UIStackView()
 
 	static var numberOfColumns = 4
 	static var numberOfRows = 4
 	static var numberOfMatches = 4
+
+	var isPlayersTurn = false
+
+	var gameDataManager: GameDataManager?
+	var networking = Networking()
+
+	
+	// MARK: UI Properties
+
+	@IBOutlet weak var gameField: UIView!
 
 	var columnWidth: CGFloat {
 		return gameField.frame.width / CGFloat(ViewController.numberOfColumns)
@@ -61,11 +73,6 @@ class ViewController: UIViewController {
 	var cellHeight: CGFloat {
 		return columnHeight / CGFloat(ViewController.numberOfRows)
 	}
-
-	var isPlayersTurn = false
-
-	var gameDataManager: GameDataManager?
-	var networking = Networking()
 
 
 	// MARK: - View Life Cycle
@@ -114,11 +121,6 @@ class ViewController: UIViewController {
 		}
 	}
 
-	enum GameResult: Int {
-		case WIN
-		case LOSE
-		case DRAW
-	}
 
 	func presentGameOverWithResult(_ result: GameResult) {
 		DispatchQueue.main.async {

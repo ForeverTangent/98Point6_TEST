@@ -59,7 +59,7 @@ class GameDataManager {
 	/**
 	Clear Game data for a new round.
 	*/
-	func clearGameData() {
+	public func clearGameData() {
 		self.gameUIData = Array(repeating: Array(repeating: GamePiece.EMPTY, count: numberOfColumns), count: numberOfRows)
 		tokensEntered = 0
 	}
@@ -86,7 +86,7 @@ class GameDataManager {
 	Updates the GameUI data.
 	- Parameter networkData: [Int]
 	*/
-	func updateGameUIDataWithNetworkData(_ networkData: [Int]) {
+	public func updateGameUIDataWithNetworkData(_ networkData: [Int]) {
 		for index in 0..<networkData.count {
 			let columnValue = networkData[index]
 			if index % 2 == 0 { 											// Player 1, remember index offset by 1.
@@ -106,7 +106,7 @@ class GameDataManager {
 	- Returns: Bool, if successful (if not room in column returns false.
 	*/
 	@discardableResult
-	func insertTokenForPlayer(_ player: GamePiece, intoColumn columnIndex: Int) -> (row: Int, column: Int) {
+	public func insertTokenForPlayer(_ player: GamePiece, intoColumn columnIndex: Int) -> (row: Int, column: Int) {
 		let columnData = getDataForColumn(columnIndex)
 		if let rowIndex = columnData.firstIndex(of: .EMPTY) {
 			gameUIData[rowIndex][columnIndex] = player
@@ -124,7 +124,7 @@ class GameDataManager {
 	- Parameter columnIndex: Int
 	- Returns Bool
 	*/
-	func canInsertTokenForPlayer(_ player: GamePiece, intoColumn columnIndex: Int) -> Bool {
+	public func canInsertTokenForPlayer(_ player: GamePiece, intoColumn columnIndex: Int) -> Bool {
 		let columnData = getDataForColumn(columnIndex)
 		if columnData.firstIndex(of: .EMPTY) != nil {
 			return true
@@ -134,7 +134,7 @@ class GameDataManager {
 
 
 
-	func isAnyPossibleMovesLeft() -> Bool {
+	public func isAnyPossibleMovesLeft() -> Bool {
 		return maxArraySize == networkData.count
 	}
 
@@ -143,7 +143,7 @@ class GameDataManager {
 	Process the internal game represenation for something we can send to the server.
 	- Returns: [Int]
 	*/
-	func getDataForNetwork() -> [Int] {
+	public func getDataForNetwork() -> [Int] {
 
 		if gameUIData.isEmpty { return [Int]() }
 
