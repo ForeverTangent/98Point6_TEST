@@ -68,38 +68,119 @@ class _98Point6_Networking_Tests: XCTestCase {
 
 
 
-//	/**
-//	Testing Insert Piece
-//	*/
-//	func testNetworking_PingServer_1() {
-//		let networking = Networking()
-//
-//		var moves = [0,1,2,3,0,1,2,3,0,1,2,3,0,1,2]
-//
-//		print("GET")
-//
-//		networking.getNewMovesWithMoves(moves) { (result) in
-//			print("HEY")
-//			print(result)
-//
-//			switch result {
-//				case .SUCCESS(let theData):
-//					print("theData \(theData)")
-//				case .NO_MORE_MOVES:
-//					print("No More Moves")
-//				case .FAILURE(let theError):
-//					print("theError \(theError)")
-//			}
-//		}
-//
-//	}
+	/**
+	Testing Insert Piece
+	*/
+	func testNetworking_PingServer_1() {
+		let networking = Networking()
 
+		let moves = [0,1,2,3,0,1,2,3,0,1,2,3,0,1,2]
+
+		let target = [0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3]
+
+		print("GET")
+
+		var waitingForReturn = false
+
+		networking.getNewMovesWithMoves(moves) { (result) in
+			print("HEY")
+			print(result)
+
+			switch result {
+				case .SUCCESS(let theData):
+					print("theData \(theData)")
+					XCTAssertTrue(theData == target, "\(theData) == \(target)")
+				case .NO_MORE_MOVES:
+					print("No More Moves")
+					XCTAssertFalse(false, "This should not happen")
+				case .FAILURE(let theError):
+					XCTAssertTrue(false, "\(theError)")
+			}
+
+			waitingForReturn = true
+		}
+
+		while !waitingForReturn {
+
+		}
+
+	}
+
+
+	/**
+	Testing Insert Piece
+	*/
+	func testNetworking_PingServer_2() {
+		let networking = Networking()
+
+		let moves = [0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3]
+
+		print("GET")
+
+		var waitingForReturn = false
+
+		networking.getNewMovesWithMoves(moves) { (result) in
+			print("HEY")
+			print(result)
+
+			switch result {
+				case .SUCCESS(let theData):
+					print("theData \(theData)")
+					XCTAssertTrue(false, "We should not have gotten data back.")
+				case .NO_MORE_MOVES:
+					print("No More Moves")
+					XCTAssertTrue(true)
+				case .FAILURE(let theError):
+					XCTAssertTrue(false, "\(theError)")
+			}
+
+			waitingForReturn = true
+		}
+
+		while !waitingForReturn {
+
+		}
+
+	}
+
+
+	/**
+	Testing Insert Piece
+	*/
+	func testNetworking_PingServer_3() {
+		let networking = Networking()
+
+		let moves = [Int]()
+
+		print("GET")
+
+		var waitingForReturn = false
+
+		networking.getNewMovesWithMoves(moves) { (result) in
+			print("HEY")
+			print(result)
+
+			switch result {
+				case .SUCCESS(let theData):
+					print("theData \(theData)")
+					XCTAssertTrue(theData.count == 1, "\(theData.count) != 1")
+				case .NO_MORE_MOVES:
+					print("No More Moves")
+					XCTAssertFalse(false, "This should not happen")
+				case .FAILURE(let theError):
+					XCTAssertTrue(false, "\(theError)")
+			}
+
+			waitingForReturn = true
+		}
+
+		while !waitingForReturn {
+
+		}
+
+	}
+
+
+	
 
 }
-
-//
-//extension _98Point6_Networking_Tests: NetworkingDelagate {
-//	func reportTheReturnedMoves(_ moves: [Int]) {
-//		print("SUCCESS")
-//	}
-//}
