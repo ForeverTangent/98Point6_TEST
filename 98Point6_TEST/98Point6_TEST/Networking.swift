@@ -8,12 +8,6 @@
 import Foundation
 
 
-// Decided to skip the delegate approach
-//protocol NetworkingDelagate {
-//	func reportTheReturnedMoves(_ moves: [Int])
-//}
-
-
 /**
 Prossible logical results we get from talking to the server
 */
@@ -35,7 +29,6 @@ class Networking {
 	let defaultSession = URLSession(configuration: .default)
 	var dataTask: URLSessionDataTask?
 	let baseURLString = "https://w0ayb2ph1k.execute-api.us-west-2.amazonaws.com/production?moves="
-//	var networkDelegate: NetworkingDelagate?
 
 
 	// MARK: - Class Methods

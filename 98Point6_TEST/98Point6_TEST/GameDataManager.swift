@@ -39,7 +39,7 @@ class GameDataManager {
 	}
 
 
-	public var gameUIData: [[GamePiece]]
+	private var gameUIData: [[GamePiece]]
 
 
 	// MARK: - Inits
@@ -250,7 +250,7 @@ class GameDataManager {
 		}
 
 		// Straight Down
-		let downMatches = getNumberOfMatchesOf(gamePiece: .PLAYER_1,
+		let downMatches = getNumberOfMatchesOf(gamePiece: gamePiece,
 											   startingAtRow: row - 1,
 											   andColumn: column,
 											   inDirectionColX: 0,
@@ -491,6 +491,63 @@ extension GameDataManager {
 	public func testGetDataForColumn(_ columnIndex: Int) -> [GamePiece] {
 		return getDataForColumn(columnIndex)
 	}
+
+	public func testGetGameUIData() -> [[GamePiece]] {
+		return gameUIData
+	}
+
+	public func testInjectGameUIData(_ gameUIData: [[GamePiece]]) {
+		self.gameUIData = gameUIData
+	}
+
+	public func testCheckingDown(row: Int,
+								 column:Int,
+								 gamePiece: GamePiece) -> Bool {
+		return checkingDown(row: row,
+							column:column,
+							gamePiece: gamePiece)
+	}
+
+	public func testCheckingLeftRight(row: Int,
+								 column:Int,
+								 gamePiece: GamePiece) -> Bool {
+		return checkingLeftRight(row: row,
+							column:column,
+							gamePiece: gamePiece)
+	}
+
+	public func testCheckingDiagonal1(row: Int,
+									  column:Int,
+									  gamePiece: GamePiece) -> Bool {
+		return checkingDiagonal1(row: row,
+								 column:column,
+								 gamePiece: gamePiece)
+	}
+
+
+	public func testCheckingDiagonal2(row: Int,
+									  column:Int,
+									  gamePiece: GamePiece) -> Bool {
+		return checkingDiagonal2(row: row,
+								 column:column,
+								 gamePiece: gamePiece)
+	}
+
+
+
+	public func testGetNumberOfMatchesOf(gamePiece: GamePiece,
+										 startingAtRow row: Int,
+										 andColumn column: Int,
+										 inDirectionColX x: Int,
+										 andRowY y: Int) -> Int {
+		
+		return getNumberOfMatchesOf(gamePiece: gamePiece,
+									startingAtRow: row,
+									andColumn: column,
+									inDirectionColX: x,
+									andRowY:y)
+	}
+
 
 
 	#endif
