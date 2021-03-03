@@ -25,7 +25,7 @@ This project can be found at:
 
 * Macintosh Desktop
 * XCode Version 12.4 or higher
-* Project product should run on any current iOS device.
+* Project product should run on any current iOS device / Mac Catalyst
 
 
 

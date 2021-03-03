@@ -30,8 +30,8 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.PLAYER_1, 	GamePiece.EMPTY, 	GamePiece.EMPTY, 	GamePiece.EMPTY],
 			[GamePiece.EMPTY, 		GamePiece.EMPTY, 	GamePiece.EMPTY, 	GamePiece.EMPTY]
 		]
-		print(dm.testGetGameUIData())
-		XCTAssertTrue(dm.testGetGameUIData() == targetData1, "dm.gameUIData != targetData")
+		print(dm.testGetGameData())
+		XCTAssertTrue(dm.testGetGameData() == targetData1, "dm.gameUIData != targetData")
 
 	}
 
@@ -52,8 +52,8 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.PLAYER_1, 	GamePiece.EMPTY, 	GamePiece.EMPTY, 	GamePiece.EMPTY],
 			[GamePiece.EMPTY, 		GamePiece.EMPTY, 	GamePiece.EMPTY, 	GamePiece.EMPTY]
 		]
-		print(dm.testGetGameUIData())
-		XCTAssertTrue(dm.testGetGameUIData() == targetData1, "dm.gameUIData != targetData")
+		print(dm.testGetGameData())
+		XCTAssertTrue(dm.testGetGameData() == targetData1, "dm.gameUIData != targetData")
 
 	}
 
@@ -85,8 +85,8 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.PLAYER_1, 	GamePiece.EMPTY, 	GamePiece.EMPTY, 	GamePiece.EMPTY],
 			[GamePiece.P2_SERVER, 	GamePiece.EMPTY, 	GamePiece.EMPTY, 	GamePiece.EMPTY]
 		]
-		print(dm.testGetGameUIData())
-		XCTAssertTrue(dm.testGetGameUIData() == targetData1, "dm.gameUIData != targetData")
+		print(dm.testGetGameData())
+		XCTAssertTrue(dm.testGetGameData() == targetData1, "dm.gameUIData != targetData")
 
 	}
 
@@ -130,7 +130,7 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
 		]
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(data)
 		XCTAssertTrue(data == targetData1, "data != targetData")
 
@@ -148,7 +148,7 @@ class _98Point6_DataManager_Tests: XCTestCase {
 
 		dm.updateGameUIDataWithNetworkData(mockNetworkData)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(data)
 		
 		let outGoingData = dm.getDataForNetwork()
@@ -169,7 +169,7 @@ class _98Point6_DataManager_Tests: XCTestCase {
 
 		dm.updateGameUIDataWithNetworkData(mockNetworkData)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(data)
 
 		let outGoingData = dm.getDataForNetwork()
@@ -192,7 +192,7 @@ class _98Point6_DataManager_Tests: XCTestCase {
 
 		dm.updateGameUIDataWithNetworkData(mockNetworkData)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(data)
 
 		let outGoingData = dm.getDataForNetwork()
@@ -216,9 +216,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 	GamePiece.EMPTY]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -244,9 +244,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.PLAYER_1, 	GamePiece.P2_SERVER, 	GamePiece.EMPTY, 	GamePiece.EMPTY]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -273,9 +273,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -315,9 +315,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -365,9 +365,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.PLAYER_1]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -402,9 +402,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.P2_SERVER]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -440,9 +440,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -474,9 +474,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -509,9 +509,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.PLAYER_1, 	GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -545,9 +545,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.P2_SERVER, 	GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -582,9 +582,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.EMPTY, 	GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -616,9 +616,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.EMPTY, 	GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -655,9 +655,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.PLAYER_1, 	GamePiece.P2_SERVER, 	GamePiece.EMPTY, 	GamePiece.EMPTY]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -684,9 +684,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -726,9 +726,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -776,9 +776,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.PLAYER_1]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -813,9 +813,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.P2_SERVER]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -851,9 +851,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -885,9 +885,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -920,9 +920,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.PLAYER_1, 	GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -956,9 +956,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.P2_SERVER, 	GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -993,9 +993,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.EMPTY, 	GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -1027,9 +1027,9 @@ class _98Point6_DataManager_Tests: XCTestCase {
 			[GamePiece.EMPTY, 	GamePiece.EMPTY, 		GamePiece.EMPTY, 		GamePiece.EMPTY]
 		]
 
-		dm.testInjectGameUIData(targetData1)
+		dm.testInjectGameData(targetData1)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(dm)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 
@@ -1069,7 +1069,7 @@ class _98Point6_DataManager_Tests: XCTestCase {
 
 		dm.updateGameUIDataWithNetworkData(mockNetworkData)
 
-		let data = dm.testGetGameUIData()
+		let data = dm.testGetGameData()
 		print(data)
 		XCTAssertTrue(data == targetData1, "\(data) != \(targetData1)")
 

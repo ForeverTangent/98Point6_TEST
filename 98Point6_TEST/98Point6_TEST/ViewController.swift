@@ -97,6 +97,9 @@ class ViewController: UIViewController {
 
 	// MARK: - Class Methods
 
+	/**
+	For the start of a round (game)
+	*/
 	func presentPassFirstTurnAlert() {
 		let alert = UIAlertController(title: "Pass?",
 									  message: "Pass first turn?",
@@ -122,6 +125,11 @@ class ViewController: UIViewController {
 	}
 
 
+	/**
+	Present the Game Over Alert
+
+	- Parameter result: GameResult
+	*/
 	func presentGameOverWithResult(_ result: GameResult) {
 		DispatchQueue.main.async {
 			let gameOverMessage: String
@@ -152,6 +160,8 @@ class ViewController: UIViewController {
 
 	/**
 	Setups up the horizontal gamefield Stack View
+
+	This is the top level of the view, which holds all the columns.
 	*/
 	func setupGameFieldStackView() {
 		gameFieldStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -180,16 +190,18 @@ class ViewController: UIViewController {
 	func clearGame() {
 		guard let theGameDataManager = gameDataManager else { return }
 
-		clearField()
 		DispatchQueue.main.async {
-			theGameDataManager.clearGameData()
-			self.presentPassFirstTurnAlert()
+			self.clearField()					// UI
+			theGameDataManager.clearGameData() 	// Game Data
+			self.presentPassFirstTurnAlert() 	// Tell the player
 		}
 
 	}
 
 	/**
 	Servers Turn
+
+	Basically this is the 'closure' completion handler we pass to the network call.
 	*/
 	func processServersTurn() {
 
@@ -216,6 +228,8 @@ class ViewController: UIViewController {
 
 	/**
 	Picks off new move from server and processes it.
+
+	Yes this is similar to  processPlayersSelectionOfColumn(), but it is here to  jsut to make it easier to reaons through.
 
 	- Parameter intArray: [Int]
 	- Returns: Int
@@ -253,6 +267,9 @@ class ViewController: UIViewController {
 
 	/**
 	Process the Player's Selcetion
+
+	Yes this is similar to  processReturnedServerMoveArray(), but it is here to  jsut to make it easier to reaons through.
+
 	- Parameter column: Int
 	*/
 	func processPlayersSelectionOfColumn(_ column: Int) {
@@ -304,7 +321,9 @@ class ViewController: UIViewController {
 
 
 	/**
-	Create a Vertical Stack View Column of Cells
+	Create one vertical UIStackView column of Cells
+
+	This is the like the most base UI/Accessibile element.
 
 	- Parameter number: Int
 	- Returns: UIView
@@ -353,6 +372,8 @@ class ViewController: UIViewController {
 
 	/**
 	Updates the token Column
+
+	Updated the UI (not game logic)
 
 	- Parameter column: Int
 	- Parameter row: Int

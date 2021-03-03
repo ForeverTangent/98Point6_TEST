@@ -39,7 +39,7 @@ class GameDataManager {
 	}
 
 
-	private var gameUIData: [[GamePiece]]
+	private var gameData: [[GamePiece]]
 
 
 	// MARK: - Inits
@@ -49,7 +49,7 @@ class GameDataManager {
 		self.numberOfColumns = numberOfColumns
 		self.numberOfRows = numberOfRows
 
-		self.gameUIData = Array(repeating: Array(repeating: GamePiece.EMPTY, count: numberOfColumns), count: numberOfRows)
+		self.gameData = Array(repeating: Array(repeating: GamePiece.EMPTY, count: numberOfColumns), count: numberOfRows)
 
 	}
 
@@ -60,7 +60,7 @@ class GameDataManager {
 	Clear Game data for a new round.
 	*/
 	public func clearGameData() {
-		self.gameUIData = Array(repeating: Array(repeating: GamePiece.EMPTY, count: numberOfColumns), count: numberOfRows)
+		self.gameData = Array(repeating: Array(repeating: GamePiece.EMPTY, count: numberOfColumns), count: numberOfRows)
 		tokensEntered = 0
 	}
 
@@ -75,7 +75,7 @@ class GameDataManager {
 	private func getDataForColumn(_ columnIndex: Int) -> [GamePiece] {
 		var results = [GamePiece]()
 		for rowIndex in 0..<numberOfRows {
-			let value = gameUIData[rowIndex][columnIndex]
+			let value = gameData[rowIndex][columnIndex]
 			results.append(value)
 		}
 		return results
@@ -83,7 +83,10 @@ class GameDataManager {
 
 
 	/**
-	Updates the GameUI data.
+	Updates the GameData from returned server data.
+
+	(Honestly, this is only used for testing, but i could be use to set a round in mid game)
+
 	- Parameter networkData: [Int]
 	*/
 	public func updateGameUIDataWithNetworkData(_ networkData: [Int]) {
@@ -109,7 +112,7 @@ class GameDataManager {
 	public func insertTokenForPlayer(_ player: GamePiece, intoColumn columnIndex: Int) -> (row: Int, column: Int) {
 		let columnData = getDataForColumn(columnIndex)
 		if let rowIndex = columnData.firstIndex(of: .EMPTY) {
-			gameUIData[rowIndex][columnIndex] = player
+			gameData[rowIndex][columnIndex] = player
 			tokensEntered += 1
 			return (row: rowIndex, column: columnIndex)
 		}
@@ -119,7 +122,10 @@ class GameDataManager {
 
 
 	/**
-	Can we insert token )before we do?
+	Can we insert token before we actual do?
+
+	(Helps with checking for a Draw.)
+
 	- Parameter player: GamePiece
 	- Parameter columnIndex: Int
 	- Returns Bool
@@ -141,18 +147,21 @@ class GameDataManager {
 
 	/**
 	Process the internal game represenation for something we can send to the server.
+
+	Basically takes the GameUIData and turns it into an [Int]
+
 	- Returns: [Int]
 	*/
 	public func getDataForNetwork() -> [Int] {
 
-		if gameUIData.isEmpty { return [Int]() }
+		if gameData.isEmpty { return [Int]() }
 
 		let player1Queue = Queue<Int>()
 		let player2Queue = Queue<Int>()
 
 		for row in 0..<numberOfRows {
 			for column in 0..<numberOfColumns {
-				switch gameUIData[row][column] {
+				switch gameData[row][column] {
 					case .PLAYER_1:
 						player1Queue.push(column)
 					case .P2_SERVER:
@@ -191,6 +200,9 @@ class GameDataManager {
 	/**
 	Fun with recursion. to check if there is a win.
 
+	This is main workhorse is checking a player/server has won the game.
+	Basically the recurrsion logic is base == 0, recurrsion == +1 + call() for the give direction.
+
 	- Parameter gamePiece: GamePiece, being checked.
 	- Parameter row: Int,
 	- Parameter column: Int,
@@ -214,7 +226,7 @@ class GameDataManager {
 
 		var results = 0
 
-		if gameUIData[row][column] == gamePiece {
+		if gameData[row][column] == gamePiece {
 			results += 1
 
 			results += getNumberOfMatchesOf(gamePiece: gamePiece,
@@ -245,7 +257,7 @@ class GameDataManager {
 		var startingCount = 0
 		var totalCount = 0
 
-		if gameUIData[row][column] == gamePiece {
+		if gameData[row][column] == gamePiece {
 			startingCount = 1
 		}
 
@@ -281,7 +293,7 @@ class GameDataManager {
 		var startingCount = 0
 		var totalCount = 0
 
-		if gameUIData[row][column] == gamePiece {
+		if gameData[row][column] == gamePiece {
 			startingCount = 1
 		}
 
@@ -326,7 +338,7 @@ class GameDataManager {
 		var startingCount = 0
 		var totalCount = 0
 
-		if gameUIData[row][column] == gamePiece {
+		if gameData[row][column] == gamePiece {
 			startingCount = 1
 		}
 
@@ -370,7 +382,7 @@ class GameDataManager {
 		var startingCount = 0
 		var totalCount = 0
 
-		if gameUIData[row][column] == gamePiece {
+		if gameData[row][column] == gamePiece {
 			startingCount = 1
 		}
 
@@ -403,6 +415,8 @@ class GameDataManager {
 
 	/**
 	Checks if there is a win, with recurssion helper.
+
+	This is the top level of the win/lost checking, to check in the all the possible direction a player can win on a token drop.
 
 	- Parameter row: Int, (row of where piece places.
 	- Parameter column:Int,  (column of where piece places.
@@ -466,7 +480,7 @@ extension GameDataManager: CustomStringConvertible {
 		// Use Stride to flip grid
 		for rowIndex in stride(from: numberOfRows-1, to: -1, by: -1) {
 			for columnIndex in 0..<numberOfColumns {
-				gameDataOutput += "\([gameUIData[rowIndex][columnIndex]])"
+				gameDataOutput += "\([gameData[rowIndex][columnIndex]])"
 			}
 			gameDataOutput += "\n"
 		}
@@ -483,7 +497,7 @@ extension GameDataManager: CustomStringConvertible {
 
 }
 
-// MARK: - Unit Testing
+// MARK: - Unit Testing Accessors
 
 extension GameDataManager {
 
@@ -492,12 +506,12 @@ extension GameDataManager {
 		return getDataForColumn(columnIndex)
 	}
 
-	public func testGetGameUIData() -> [[GamePiece]] {
-		return gameUIData
+	public func testGetGameData() -> [[GamePiece]] {
+		return gameData
 	}
 
-	public func testInjectGameUIData(_ gameUIData: [[GamePiece]]) {
-		self.gameUIData = gameUIData
+	public func testInjectGameData(_ gameData: [[GamePiece]]) {
+		self.gameData = gameData
 	}
 
 	public func testCheckingDown(row: Int,

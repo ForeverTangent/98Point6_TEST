@@ -7,6 +7,9 @@
 
 import Foundation
 
+/**
+Basic generic queue.
+*/
 class Queue<E> {
 	var items  = [E]()
 

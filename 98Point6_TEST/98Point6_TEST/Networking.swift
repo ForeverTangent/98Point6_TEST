@@ -62,6 +62,8 @@ class Networking {
 	/**
 	Get the new moves from the server
 
+	Nothing really fancy here other then passing in the completino.
+
 	- Parameter moves: [Int], current moves list
 	- Parameter completion: @escaping (MoveReults<[Int]>) -> Void
 	*/
